@@ -1,0 +1,41 @@
+services:
+  django:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: django_test
+    ports:
+      - "8000:8000"
+    command: >
+      bash -c "
+      python manage.py makemigrations --noinput &&
+      python manage.py migrate &&
+      python manage.py runserver 0.0.0.0:8000
+      "
+    volumes:
+      - .:/booking_app
+    environment:
+      - DJANGO_SETTINGS_MODULE=booking_app.settings_dev
+    depends_on:
+      pgdb:
+        condition: service_healthy
+  pgdb:
+    image: postgres
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    container_name: pgdb
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data/
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d postgres" ]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 5s
+
+volumes:
+  pgdbdata:
