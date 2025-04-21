@@ -6,6 +6,10 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
+    defaults:
+      run:
+        working-directory: booking_app  
+
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
@@ -17,11 +21,9 @@ jobs:
 
     - name: Install dependencies
       run: |
-        cd booking_app
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
     - name: Run Pytest with coverage
       run: |
-        cd booking_app
         pytest
