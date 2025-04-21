@@ -1,7 +1,7 @@
-from django.test import TestCase
-from django.contrib.auth.models import User
-from django.utils import timezone
 from booking_app_admin.models import Booking, Room
+from django.contrib.auth.models import User
+from django.test import TestCase
+from django.utils import timezone
 
 
 class BookingModelTest(TestCase):

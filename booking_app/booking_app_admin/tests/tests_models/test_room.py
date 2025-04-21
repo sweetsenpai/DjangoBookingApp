@@ -1,6 +1,6 @@
-from django.test import TestCase
-from django.core.exceptions import ValidationError
 from booking_app_admin.models import Room
+from django.core.exceptions import ValidationError
+from django.test import TestCase
 
 
 class RoomModelTest(TestCase):
