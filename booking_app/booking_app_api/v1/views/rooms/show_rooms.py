@@ -1,9 +1,10 @@
-from booking_app_admin.models import Room
-from booking_app_api.v1.serializers import RoomSerializer
-from drf_spectacular.utils import (OpenApiExample, OpenApiParameter,
-                                   extend_schema)
 from rest_framework.filters import OrderingFilter
 from rest_framework.generics import ListAPIView
+
+from drf_spectacular.utils import OpenApiExample, OpenApiParameter, extend_schema
+
+from booking_app_admin.models import Room
+from booking_app_api.v1.serializers import RoomSerializer
 
 
 @extend_schema(
