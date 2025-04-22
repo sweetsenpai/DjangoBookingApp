@@ -1,0 +1,40 @@
+from decimal import Decimal
+
+from django.test import TestCase
+
+from rest_framework import status
+from rest_framework.test import APITestCase
+
+from booking_app_admin.models import Room
+
+
+class ShowRoomsApiTest(APITestCase):
+
+    def setUp(self):
+        rooms = [
+            Room(name="Для двоих", price_per_day=Decimal("100.00"), capacity=2),
+            Room(name="Для одного", price_per_day=Decimal("50.00"), capacity=1),
+            Room(name="Для троих", price_per_day=Decimal("150.00"), capacity=3),
+        ]
+        Room.objects.bulk_create(rooms)
+
+    def test_get_rooms(self):
+
+        response = self.client.get("/api/v1/all-rooms/")
+        expected_response = [
+            {"id": 1, "name": "Для двоих", "price_per_day": "100.00", "capacity": 2},
+            {"id": 2, "name": "Для одного", "price_per_day": "50.00", "capacity": 1},
+            {"id": 3, "name": "Для троих", "price_per_day": "150.00", "capacity": 3},
+        ]
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, expected_response)
+
+    def test_get_rooms_with_filter(self):
+        response = self.client.get("/api/v1/all-rooms/?ordering=price_per_day")
+        expected_response = [
+            {"id": 2, "name": "Для одного", "price_per_day": "50.00", "capacity": 1},
+            {"id": 1, "name": "Для двоих", "price_per_day": "100.00", "capacity": 2},
+            {"id": 3, "name": "Для троих", "price_per_day": "150.00", "capacity": 3},
+        ]
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, expected_response)

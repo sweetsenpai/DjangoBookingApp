@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
-import logging
 from decimal import Decimal
+import logging
+
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator
 from django.db import models

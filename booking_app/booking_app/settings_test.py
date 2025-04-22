@@ -15,3 +15,4 @@ DEBUG = True
 
 # Дополнительные настройки для тестирования
 CACHE_BACKEND = "django.core.cache.backends.locmem.LocMemCache"
+DEBUG_TOOLBAR_PANELS = []
