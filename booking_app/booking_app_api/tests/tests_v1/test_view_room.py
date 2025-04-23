@@ -1,6 +1,7 @@
 from decimal import Decimal
 
 from django.test import TestCase
+from django.urls import reverse
 
 from rest_framework import status
 from rest_framework.test import APITestCase
@@ -19,8 +20,8 @@ class ShowRoomsApiTest(APITestCase):
         Room.objects.bulk_create(rooms)
 
     def test_get_rooms(self):
-
-        response = self.client.get("/api/v1/all-rooms/")
+        url = reverse("all-rooms")
+        response = self.client.get(url)
         expected_response = [
             {"id": 1, "name": "Для двоих", "price_per_day": "100.00", "capacity": 2},
             {"id": 2, "name": "Для одного", "price_per_day": "50.00", "capacity": 1},
@@ -30,7 +31,8 @@ class ShowRoomsApiTest(APITestCase):
         self.assertEqual(response.data, expected_response)
 
     def test_get_rooms_with_filter(self):
-        response = self.client.get("/api/v1/all-rooms/?ordering=price_per_day")
+        url = reverse("all-rooms")
+        response = self.client.get(f"{url}?ordering=price_per_day")
         expected_response = [
             {"id": 2, "name": "Для одного", "price_per_day": "50.00", "capacity": 1},
             {"id": 1, "name": "Для двоих", "price_per_day": "100.00", "capacity": 2},
