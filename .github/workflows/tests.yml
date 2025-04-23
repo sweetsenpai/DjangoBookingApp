@@ -33,5 +33,6 @@ jobs:
     - name: Reset repository on test failure
       if: failure()  # этот шаг выполняется, только если тесты не прошли
       run: |
-        git reset --hard HEAD~1
+        git reset --hard HEAD
+        git clean -fd
         git push --force
