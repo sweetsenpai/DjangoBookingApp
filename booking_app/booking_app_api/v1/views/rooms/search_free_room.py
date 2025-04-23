@@ -5,13 +5,20 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from drf_spectacular.utils import OpenApiParameter, extend_schema
+from drf_spectacular.utils import (
+    OpenApiExample,
+    OpenApiParameter,
+    OpenApiResponse,
+    extend_schema,
+)
 
 from booking_app_admin.models import Booking, Room
 from booking_app_api.v1.serializers import RoomSearchParamsSerializer, RoomSerializer
 
 
 @extend_schema(
+    summary="Поиск по доступным комнатам",
+    description="Поиск по доступным комнатам в указанный временной промежуток с возхможностью так же указать вместительность комнаты.",
     parameters=[
         OpenApiParameter(
             "date_start",
@@ -33,6 +40,22 @@ from booking_app_api.v1.serializers import RoomSearchParamsSerializer, RoomSeria
         ),
     ],
     responses=RoomSerializer(many=True),
+    examples=[
+        OpenApiExample(
+            name="Стандартный ответ",
+            value=[
+                {
+                    "id": 1,
+                    "name": "Для двоих",
+                    "price_per_day": "100.00",
+                    "capacity": 2,
+                }
+            ],
+        ),
+        OpenApiExample(
+            name="Ответ когда не удалось найти комнату по заданым параметрам.", value=[]
+        ),
+    ],
 )
 class SearchFreeRoomApi(APIView):
 
