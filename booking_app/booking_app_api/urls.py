@@ -1,4 +1,3 @@
-# booking_app_api/urls.py (или основной urls.py проекта)
 from django.urls import path, include
 
 urlpatterns = [
