@@ -35,7 +35,5 @@ jobs:
       run: |
         git reset --hard HEAD
         git clean -fd
-        git remote set-url origin https://github.com/${{ github.repository }}.git
+        git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
         git push --force
-      env:
-        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
