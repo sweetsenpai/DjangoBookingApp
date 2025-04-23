@@ -28,7 +28,7 @@ class ShowRoomsApiTest(APITestCase):
             {"id": 3, "name": "Для троих", "price_per_day": "150.00", "capacity": 3},
         ]
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data, 1)
+        self.assertEqual(response.data, expected_response)
 
     def test_get_rooms_with_filter(self):
         url = reverse("all-rooms")
