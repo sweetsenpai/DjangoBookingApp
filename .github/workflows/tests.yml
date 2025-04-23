@@ -25,5 +25,13 @@ jobs:
         pip install -r requirements.txt
 
     - name: Run Pytest with coverage
+      id: pytest
       run: |
         pytest
+      continue-on-error: false  # не продолжать, если тесты не прошли
+
+    - name: Reset repository on test failure
+      if: failure()  # этот шаг выполняется, только если тесты не прошли
+      run: |
+        git reset --hard HEAD~1
+        git push --force
