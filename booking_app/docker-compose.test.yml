@@ -1,35 +1,32 @@
 services:
-  django:
+  pytest:
     build:
       context: .
       dockerfile: Dockerfile.dev
-    container_name: django
+    container_name: pytest
     ports:
       - "8000:8000"
     command: >
       bash -c "
       python manage.py makemigrations --noinput &&
       python manage.py migrate &&
-      gunicorn booking_app.wsgi:application --bind 0.0.0.0:8000
+      pytest
       "
-    volumes:
-      - .:/booking_app
-      - ./logs:/logs
     environment:
-      - DJANGO_SETTINGS_MODULE=booking_app.settings_prod
-      - DEBUG=0
+      - DJANGO_SETTINGS_MODULE=booking_app.settings_test
+      - DEBUG=1
     depends_on:
-      pgdb:
+      testdb:
         condition: service_healthy
-  pgdb:
+  testdb:
     image: postgres
     environment:
       - POSTGRES_DB=postgres
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-    container_name: pgdb
+    container_name: testdb
     volumes:
-      - ./pgdata:/var/lib/postgresql/data/
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
       - "5432:5432"
     healthcheck:
@@ -39,5 +36,3 @@ services:
       start_period: 30s
       timeout: 5s
 
-volumes:
-  pgdbdata:

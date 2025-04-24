@@ -1,10 +1,11 @@
+import pytest
+from booking_app_admin.models import Booking, Room
 from django.contrib.auth.models import User
 from django.test import TestCase
 from django.utils import timezone
 
-from booking_app_admin.models import Booking, Room
 
-
+@pytest.mark.django_db(transaction=True, reset_sequences=True)
 class BookingModelTest(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(username="testuser", password="12345")

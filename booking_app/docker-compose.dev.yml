@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.dev
-    container_name: django_dev
+    container_name: django
     ports:
       - "8000:8000"
     command: >
@@ -14,8 +14,10 @@ services:
       "
     volumes:
       - .:/booking_app
+      - ./logs:/logs
     environment:
       - DJANGO_SETTINGS_MODULE=booking_app.settings_dev
+      - DEBUG=1
     depends_on:
       pgdb:
         condition: service_healthy
@@ -28,6 +30,7 @@ services:
     container_name: pgdb
     volumes:
       - ./pgdata:/var/lib/postgresql/data/
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
       - "5432:5432"
     healthcheck:

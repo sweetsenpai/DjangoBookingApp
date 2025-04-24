@@ -1,12 +1,11 @@
-from django.db.models import Q
-from django.db.models import QuerySet
-from booking_app_admin.models import Booking, Room
-from datetime import datetime
 from datetime import datetime, time
-from django.utils.timezone import make_aware, get_current_timezone
+
+from booking_app_admin.models import Booking, Room
+from django.db.models import Q, QuerySet
+from django.utils.timezone import get_current_timezone, make_aware
 
 
-def get_free_rooms(date_start: datetime, date_end: datetime)->QuerySet:
+def get_free_rooms(date_start: datetime, date_end: datetime) -> QuerySet:
     """
 
     :param date_start: дата заезда
