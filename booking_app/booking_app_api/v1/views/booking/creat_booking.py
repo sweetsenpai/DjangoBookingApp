@@ -10,6 +10,7 @@ from rest_framework.views import APIView
 
 from drf_spectacular.utils import OpenApiExample, OpenApiResponse, extend_schema
 
+from booking_app_api.utils import BookingThrottle
 from booking_app_api.v1.serializers import BookingCreateSerializer
 
 logger = logging.getLogger(__name__)
@@ -70,6 +71,19 @@ logger = logging.getLogger(__name__)
                 ),
             ],
         ),
+        429: OpenApiResponse(
+            response=BookingCreateSerializer,
+            description="Too Many Requests",
+            examples=[
+                OpenApiExample(
+                    name="Error: Too Many Requests",
+                    value={
+                        "detail": "Запрос был проигнорирован. Expected available in 86391 seconds."
+                    },
+                    media_type="application/json",
+                ),
+            ],
+        ),
         503: OpenApiResponse(
             response=BookingCreateSerializer,
             description="Ошибка сервера",
@@ -87,6 +101,7 @@ logger = logging.getLogger(__name__)
 )
 class CreateBookingApi(APIView):
     permission_classes = [IsAuthenticated]
+    throttle_classes = [BookingThrottle]
 
     def post(self, request):
         serializer = BookingCreateSerializer(data=request.data)

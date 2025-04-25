@@ -58,7 +58,7 @@ from booking_app_api.v1.serializers import BookingSerializer
                 )
             ],
         ),
-    },
+    }
 )
 class UserAllBookingApi(ListAPIView):
     permission_classes = [IsAuthenticated]
