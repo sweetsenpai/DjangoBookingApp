@@ -1,0 +1,11 @@
+[MASTER]
+load-plugins=pylint_django  # Активация плагина
+
+[FORMAT]
+max-line-length=120  # Максимальная длина строки
+
+[MESSAGES CONTROL]
+disable=
+    missing-docstring,  # Игнорировать отсутствие docstring
+    too-few-public-methods,  # Игнорировать для Django-классов
+    import-error  # Игнорировать ошибки импорта (если нужно)

@@ -43,7 +43,7 @@ def test_bookings(test_rooms, django_user_model):
     return superuser, user
 
 
-@pytest.mark.django_db(transaction=True, reset_sequences=True)
+@pytest.mark.django_db
 def test_free_rooms_available(client, test_bookings, test_rooms):
     url = reverse("search-free-rooms")
     response = client.get(
@@ -61,7 +61,7 @@ def test_free_rooms_available(client, test_bookings, test_rooms):
     assert test_rooms[1].id in ids
 
 
-@pytest.mark.django_db(transaction=True, reset_sequences=True)
+@pytest.mark.django_db
 def test_free_rooms_capacity_filter(client, test_bookings, test_rooms):
     url = reverse("search-free-rooms")
     response = client.get(
@@ -78,7 +78,7 @@ def test_free_rooms_capacity_filter(client, test_bookings, test_rooms):
     assert test_rooms[1].id not in ids
 
 
-@pytest.mark.django_db(transaction=True, reset_sequences=True)
+@pytest.mark.django_db
 def test_free_rooms_validation_error(client):
     url = reverse("search-free-rooms")
     response = client.get(url, {"date_end": "2021-01-03"})

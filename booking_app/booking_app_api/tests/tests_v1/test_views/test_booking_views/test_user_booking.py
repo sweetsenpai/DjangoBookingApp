@@ -7,17 +7,21 @@ from django.urls import reverse
 from django.utils import timezone
 
 from rest_framework import status
-from rest_framework.test import APITestCase
+from rest_framework.test import APITestCase, APIClient
 
 import pytest
 
 from booking_app_admin.models import Booking, Room
 
 
-@pytest.mark.django_db(transaction=True, reset_sequences=True)
+@pytest.mark.django_db
 class UserBookingApiTest(APITestCase):
+    @pytest.mark.django_db
     def setUp(self):
         self.User = get_user_model()
+        self.user = self.User.objects.create_user(username="user", password="54321")
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.user)
 
         self.room1 = Room.objects.create(
             name="Для двоих", price_per_day=Decimal("100.00"), capacity=2
@@ -47,8 +51,8 @@ class UserBookingApiTest(APITestCase):
             room=self.room2, user=self.user, date_start=self.start2, date_end=self.end2
         )
 
+    @pytest.mark.django_db
     def test_get_user_rooms(self):
-        self.client.login(username="user", password="54321")
         url = reverse("user-all-booking")
         response = self.client.get(url)
 
