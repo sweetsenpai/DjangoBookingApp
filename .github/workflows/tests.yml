@@ -18,13 +18,13 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y docker-compose
         
-    - name: List files in the current directory
-      run: |
-        ls -la  
-        
     - name: Change directory to the project folder
       run: |
         cd booking_app
+
+    - name: List files in the current directory
+      run: |
+        ls -la  
 
     - name: Build and run pytest container
       run: |
