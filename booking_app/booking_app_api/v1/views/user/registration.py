@@ -1,12 +1,17 @@
 import logging
 
 from django.contrib.auth.models import User
+from django.db import transaction
 
-from rest_framework import generics
+from rest_framework import generics, status
 from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
+from rest_framework.serializers import ValidationError
 
 from drf_spectacular.utils import OpenApiExample, OpenApiResponse, extend_schema
+from rest_framework_simplejwt.tokens import RefreshToken
 
+from booking_app_api.utils import UserRegistrationThrottle
 from booking_app_api.v1.serializers import RegistrationSerializer
 
 logger = logging.getLogger(__name__)
@@ -14,7 +19,7 @@ logger = logging.getLogger(__name__)
 
 @extend_schema(
     summary="Регистрация",
-    description="Создание нового пользователя",
+    description="Создание нового пользователя. В случае успеха возвращает access_token.",
     request=RegistrationSerializer,
     responses={
         201: OpenApiResponse(
@@ -23,10 +28,7 @@ logger = logging.getLogger(__name__)
             examples=[
                 OpenApiExample(
                     name="Успешный ответ",
-                    value={
-                        "username": "test_user",
-                        "email": "test@example.com",
-                    },
+                    value={"access_token": "MTV9.J1gJ9ZNlo..."},
                     media_type="application/json",
                 ),
             ],
@@ -73,9 +75,48 @@ logger = logging.getLogger(__name__)
                 ),
             ],
         ),
+        500: OpenApiResponse(
+            response=RegistrationSerializer,
+            description="Server Error",
+            examples=[
+                OpenApiExample(
+                    name="Server Error",
+                    value={
+                        "detail": "Произошла непредвиденная ошибка. Попробуйте позднее."
+                    },
+                    media_type="application/json",
+                ),
+            ],
+        ),
     },
 )
 class UserRegistrationApi(generics.CreateAPIView):
     queryset = User.objects.all()
     permission_classes = [AllowAny]
     serializer_class = RegistrationSerializer
+    throttle_classes = [UserRegistrationThrottle]
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data)
+        try:
+            with transaction.atomic():
+                serializer.is_valid(raise_exception=True)
+                user = serializer.save()
+                refresh = RefreshToken.for_user(user)
+                response_data = {
+                    "access_token": str(refresh.access_token),
+                }
+                return Response(response_data, status=status.HTTP_201_CREATED)
+        except ValidationError:
+            raise
+
+        except Exception as e:
+            logger.error(
+                "Вовремя регистрации нового пользователя проищошла непредвиденая ошибка.\n"
+                f"data: {request.data}\n"
+                f"error: {str(e)}"
+            )
+            return Response(
+                {"detail": "Произошла непредвиденная ошибка. Попробуйте позднее."},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )

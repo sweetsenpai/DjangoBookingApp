@@ -102,17 +102,21 @@ logger = logging.getLogger(__name__)
 class CreateBookingApi(APIView):
     permission_classes = [IsAuthenticated]
     throttle_classes = [BookingThrottle]
+    serializer_class = BookingCreateSerializer
 
     def post(self, request):
-        serializer = BookingCreateSerializer(data=request.data)
+        serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             try:
-                serializer.validated_data["user"] = request.user
-                serializer.save()
-                logger.info(
-                    f"Польщователь с id  {request.user.id} создал новое бронирование {serializer.data}"
-                )
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
+                with transaction.atomic():
+                    serializer.validated_data["user"] = request.user
+                    serializer.save()
+                    logger.info(
+                        f"Польщователь с id  {request.user.id} создал новое бронирование {serializer.data}"
+                    )
+                    return Response(serializer.data, status=status.HTTP_201_CREATED)
+            except ValidationError:
+                raise
             except IntegrityError:
                 return Response(
                     {
