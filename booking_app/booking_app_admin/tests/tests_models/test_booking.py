@@ -1,8 +1,10 @@
-import pytest
-from booking_app_admin.models import Booking, Room
 from django.contrib.auth.models import User
 from django.test import TestCase
 from django.utils import timezone
+
+import pytest
+
+from booking_app_admin.models import Booking, Room
 
 
 @pytest.mark.django_db(transaction=True, reset_sequences=True)

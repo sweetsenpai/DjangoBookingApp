@@ -1,14 +1,16 @@
 import logging
 
-from booking_app_api.v1.serializers import BookingCreateSerializer
 from django.db import transaction
 from django.db.utils import IntegrityError
-from drf_spectacular.utils import (OpenApiExample, OpenApiResponse,
-                                   extend_schema)
+
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+
+from drf_spectacular.utils import OpenApiExample, OpenApiResponse, extend_schema
+
+from booking_app_api.v1.serializers import BookingCreateSerializer
 
 logger = logging.getLogger(__name__)
 
@@ -18,35 +20,70 @@ logger = logging.getLogger(__name__)
     description="Создаёт новую бронь для комнаты на заданные даты. Требуется авторизация.",
     request=BookingCreateSerializer,
     responses={
-        201: BookingCreateSerializer,
+        201: OpenApiResponse(
+            response=BookingCreateSerializer,
+            description="Успешный ответ",
+            examples=[
+                OpenApiExample(
+                    name="Успешный ответ",
+                    value={
+                        "room": 1,
+                        "date_start": "2025-07-01T00:00:00+03:00",
+                        "date_end": "2025-07-03T00:00:00+03:00",
+                    },
+                    media_type="application/json",
+                ),
+            ],
+        ),
         400: OpenApiResponse(
+            response=BookingCreateSerializer,
             description="Ошибка валидации",
             examples=[
                 OpenApiExample(
-                    name="Ошибка валидации",
+                    name="Указанная комната не существует",
+                    value={
+                        "room": [
+                            'Недопустимый первичный ключ "0" - объект не существует.'
+                        ]
+                    },
+                    media_type="application/json",
+                ),
+                OpenApiExample(
+                    name="Не верный формат даты",
+                    value={
+                        "date_start": [
+                            "Неправильный формат datetime. Используйте один из этих форматов:  YYYY-MM-DDThh:mm[:ss[.uuuuuu]][+HH:MM|-HH:MM|Z]."
+                        ]
+                    },
+                    media_type="application/json",
+                ),
+            ],
+        ),
+        409: OpenApiResponse(
+            response=BookingCreateSerializer,
+            description="Конфликт броней",
+            examples=[
+                OpenApiExample(
+                    name="Комната уже забронированна",
                     value={"detail": "Комната уже забронирована на указанные даты."},
+                    media_type="application/json",
+                ),
+            ],
+        ),
+        503: OpenApiResponse(
+            response=BookingCreateSerializer,
+            description="Ошибка сервера",
+            examples=[
+                OpenApiExample(
+                    name="Произошла непредвиденая ошибка во время бронирования",
+                    value={
+                        "detail": "Сервис временно не доступен.\nПожалйста, перезагрузите страницу и попробуйте ещё раз."
+                    },
+                    media_type="application/json",
                 ),
             ],
         ),
     },
-    examples=[
-        OpenApiExample(
-            name="Пример запроса",
-            value={"room": 1, "date_start": "2025-05-01", "date_end": "2025-05-03"},
-            request_only=True,
-        ),
-        OpenApiExample(
-            name="Пример успешного ответа",
-            value={
-                "id": 123,
-                "room": 1,
-                "user": 5,
-                "date_start": "2025-05-01",
-                "date_end": "2025-05-03",
-            },
-            response_only=True,
-        ),
-    ],
 )
 class CreateBookingApi(APIView):
     permission_classes = [IsAuthenticated]
@@ -66,7 +103,7 @@ class CreateBookingApi(APIView):
                     {
                         "detail": "Комната уже забронирована. Попробуйте изменить даты бронирования или выбирете другую комнату."
                     },
-                    status=status.HTTP_400_BAD_REQUEST,
+                    status=status.HTTP_409_CONFLICT,
                 )
             except Exception as e:
                 logger.error(

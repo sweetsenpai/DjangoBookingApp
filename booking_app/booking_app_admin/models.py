@@ -1,11 +1,14 @@
-import logging
 from datetime import datetime, timedelta
 from decimal import Decimal
+import logging
 
 from django.contrib.auth.models import User
 from django.contrib.postgres.constraints import ExclusionConstraint
-from django.contrib.postgres.fields import (DateTimeRangeField, RangeBoundary,
-                                            RangeOperators)
+from django.contrib.postgres.fields import (
+    DateTimeRangeField,
+    RangeBoundary,
+    RangeOperators,
+)
 from django.core.validators import MinValueValidator
 from django.db import models
 from django.db.models import Func, Q

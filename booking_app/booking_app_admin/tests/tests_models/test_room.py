@@ -1,7 +1,9 @@
-import pytest
-from booking_app_admin.models import Room
 from django.core.exceptions import ValidationError
 from django.test import TestCase
+
+import pytest
+
+from booking_app_admin.models import Room
 
 
 @pytest.mark.django_db(transaction=True, reset_sequences=True)

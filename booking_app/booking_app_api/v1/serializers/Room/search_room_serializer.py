@@ -1,5 +1,5 @@
-import logging
 from datetime import date
+import logging
 
 from rest_framework import serializers
 
