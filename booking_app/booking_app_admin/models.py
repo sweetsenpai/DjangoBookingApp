@@ -3,8 +3,15 @@ from decimal import Decimal
 import logging
 
 from django.contrib.auth.models import User
+from django.contrib.postgres.constraints import ExclusionConstraint
+from django.contrib.postgres.fields import (
+    DateTimeRangeField,
+    RangeBoundary,
+    RangeOperators,
+)
 from django.core.validators import MinValueValidator
 from django.db import models
+from django.db.models import Func, Q
 
 
 class Room(models.Model):
@@ -28,11 +35,30 @@ class Room(models.Model):
         return self.name
 
 
+class TsTzRange(Func):
+    function = "TSTZRANGE"
+    outpput_field = DateTimeRangeField()
+
+
 class Booking(models.Model):
     date_start = models.DateTimeField()
     date_end = models.DateTimeField()
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    class Meta:
+        constraints = [
+            ExclusionConstraint(
+                name="exclude_overlapping_booking",
+                expressions=[
+                    (
+                        TsTzRange("date_start", "date_end", RangeBoundary()),
+                        RangeOperators.OVERLAPS,
+                    ),
+                    ("room", RangeOperators.EQUAL),
+                ],
+            )
+        ]
 
     def __str__(self):
         return f"{self.user.username} – {self.room.name} – {self.date_start:%Y-%m-%d}"

@@ -13,6 +13,7 @@ from drf_spectacular.utils import (
 )
 
 from booking_app_admin.models import Booking, Room
+from booking_app_api.utils.filters import get_free_rooms
 from booking_app_api.v1.serializers import RoomSearchParamsSerializer, RoomSerializer
 
 
@@ -68,14 +69,7 @@ class SearchFreeRoomApi(APIView):
         date_start = validated["date_start"]
         date_end = validated["date_end"]
         capacity = validated["capacity"]
-
-        busy_rooms = Booking.objects.filter(
-            Q(date_start__lt=date_end) & Q(date_end__gt=date_start)
-        ).values_list("room_id", flat=True)
-
-        free_rooms = Room.objects.exclude(id__in=busy_rooms).filter(
-            capacity__gte=capacity
-        )
+        free_rooms = get_free_rooms(date_start, date_end).filter(capacity__gte=capacity)
         serializer = RoomSerializer(free_rooms, many=True)
 
         return Response(serializer.data)

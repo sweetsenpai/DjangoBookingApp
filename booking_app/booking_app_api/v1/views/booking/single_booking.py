@@ -1,5 +1,3 @@
-from http.client import responses
-
 from rest_framework import status
 from rest_framework.generics import RetrieveDestroyAPIView
 from rest_framework.response import Response

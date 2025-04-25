@@ -10,6 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+from datetime import timedelta
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -23,8 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-8)mvc9c!6m+6=d$!j-2t$zag5f#w0y5ab4)d-zx0@2ykszz#di"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
-
+DEBUG = os.getenv("DEBUG", "0") == "1"
 ALLOWED_HOSTS = ["localhost", "127.0.0.1", "0.0.0.0"]
 
 # Application definition
@@ -41,10 +42,12 @@ INSTALLED_APPS = [
     "rest_framework",
     "drf_spectacular",
     "django_filters",
+    "rest_framework_simplejwt",
 ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -123,6 +126,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = "static/"
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -138,13 +142,23 @@ PASSWORD_HASHERS = [
     "django.contrib.auth.hashers.ScryptPasswordHasher",
 ]
 
-
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=120),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
+}
 REST_FRAMEWORK = {
     "DEFAULT_FILTER_BACKENDS": [
         "django_filters.rest_framework.DjangoFilterBackend",
         "rest_framework.filters.OrderingFilter",
     ],
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ],
+    "DEFAULT_THROTTLE_RATES": {
+        "user_registration": "100/day",
+        "bookingcreate": "100/day",
+    },
 }
 
 SPECTACULAR_SETTINGS = {
@@ -152,4 +166,74 @@ SPECTACULAR_SETTINGS = {
     "DESCRIPTION": "API for Booking App",
     "VERSION": "1.0.0",
     "SERVE_INCLUDE_SCHEMA": False,
+}
+
+LOG_DIR = BASE_DIR / "logs"
+LOG_DIR.mkdir(exist_ok=True)
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "verbose": {
+            "format": "{asctime} {levelname} {name} {message}",
+            "style": "{",
+        },
+        "simple": {
+            "format": "{levelname} {message}",
+            "style": "{",
+        },
+    },
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "simple",
+            "level": "DEBUG" if DEBUG else "INFO",
+        },
+        "info_file": {
+            "class": "logging.handlers.RotatingFileHandler",
+            "filename": "/logs/info.log",
+            "level": "INFO",
+            "formatter": "verbose",
+            "maxBytes": 1024 * 1024 * 5,
+            "backupCount": 3,
+        },
+        "error_file": {
+            "class": "logging.handlers.RotatingFileHandler",
+            "filename": "/logs/error.log",
+            "level": "ERROR",
+            "formatter": "verbose",
+            "maxBytes": 1024 * 1024 * 5,
+            "backupCount": 3,
+        },
+        "critical_file": {
+            "class": "logging.handlers.RotatingFileHandler",
+            "filename": "/logs/critical.log",
+            "level": "CRITICAL",
+            "formatter": "verbose",
+            "maxBytes": 1024 * 1024 * 5,
+            "backupCount": 3,
+        },
+    },
+    "root": {
+        "handlers": ["console", "info_file", "error_file"],
+        "level": "INFO",
+    },
+    "loggers": {
+        "django": {
+            "handlers": ["console", "info_file", "error_file", "critical_file"],
+            "level": "INFO",
+            "propagate": False,
+        },
+        "django.db.backends": {
+            "handlers": ["console"],
+            "level": "ERROR",
+            "propagate": False,
+        },
+        "booking_app_api": {
+            "handlers": ["console", "info_file", "error_file", "critical_file"],
+            "level": "DEBUG",
+            "propagate": False,
+        },
+    },
 }

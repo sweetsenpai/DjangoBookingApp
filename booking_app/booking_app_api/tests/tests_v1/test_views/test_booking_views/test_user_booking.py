@@ -9,9 +9,12 @@ from django.utils import timezone
 from rest_framework import status
 from rest_framework.test import APITestCase
 
+import pytest
+
 from booking_app_admin.models import Booking, Room
 
 
+@pytest.mark.django_db(transaction=True, reset_sequences=True)
 class UserBookingApiTest(APITestCase):
     def setUp(self):
         self.User = get_user_model()
