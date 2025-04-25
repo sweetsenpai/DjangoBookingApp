@@ -1,9 +1,9 @@
 services:
-  django:
+  djangodev:
     build:
       context: .
       dockerfile: Dockerfile.dev
-    container_name: django
+    container_name: djangodev
     ports:
       - "8000:8000"
     command: >
@@ -19,15 +19,15 @@ services:
       - DJANGO_SETTINGS_MODULE=booking_app.settings_dev
       - DEBUG=1
     depends_on:
-      pgdb:
+      pgdbdev:
         condition: service_healthy
-  pgdb:
+  pgdbdev:
     image: postgres
     environment:
       - POSTGRES_DB=postgres
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-    container_name: pgdb
+    container_name: pgdbdev
     volumes:
       - ./pgdata:/var/lib/postgresql/data/
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
