@@ -176,3 +176,4 @@ cython_debug/
 **/migrations/
 !**/migrations/__init__.py
 /booking_app/pgdata/
+/booking_app/staticfiles/

@@ -117,6 +117,7 @@ class CreateBookingApi(APIView):
                     return Response(serializer.data, status=status.HTTP_201_CREATED)
             except ValidationError:
                 raise
+            # Обработка исключения от postgresql при попытке создания пересикающихся броней.
             except IntegrityError:
                 return Response(
                     {
