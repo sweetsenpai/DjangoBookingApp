@@ -1,11 +1,22 @@
 [MASTER]
+ignore=migrations
 load-plugins=pylint_django
-
-[FORMAT]
-max-line-length=120
 
 [MESSAGES CONTROL]
 disable=
     missing-docstring,
+    invalid-name,
     too-few-public-methods,
-    import-error
+    no-member,
+    too-many-arguments,
+    too-many-locals,
+    too-many-instance-attributes,
+    too-many-branches,
+    too-many-statements,
+    duplicate-code,
+
+[FORMAT]
+max-line-length=150
+
+[VARIABLES]
+good-names=i,j,k,x,y,z,pk,id

@@ -5,7 +5,6 @@ from drf_spectacular.utils import (OpenApiExample, OpenApiResponse,
                                    extend_schema)
 from rest_framework.generics import ListAPIView
 from rest_framework.permissions import IsAuthenticated
-from rest_framework_simplejwt.authentication import JWTAuthentication
 
 
 @extend_schema(
