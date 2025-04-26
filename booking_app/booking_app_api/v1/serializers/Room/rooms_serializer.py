@@ -1,6 +1,5 @@
-from rest_framework import serializers
-
 from booking_app_admin.models import Room
+from rest_framework import serializers
 
 
 class RoomSerializer(serializers.ModelSerializer):

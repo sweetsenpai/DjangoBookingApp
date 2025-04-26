@@ -1,10 +1,9 @@
+import pytest
+from booking_app_admin.models import Booking, Room
 from django.contrib.auth.models import User
+from django.db.utils import IntegrityError
 from django.test import TestCase
 from django.utils import timezone
-
-import pytest
-
-from booking_app_admin.models import Booking, Room
 
 
 @pytest.mark.django_db(transaction=True, reset_sequences=True)
@@ -23,3 +22,23 @@ class BookingModelTest(TestCase):
         self.assertEqual(booking.user, self.user)
         self.assertEqual(booking.date_start, start)
         self.assertEqual(booking.date_end, end)
+
+    def test_cannot_create_overlapping_booking(self):
+
+        start = timezone.now()
+        end = start + timezone.timedelta(days=2)
+
+        # Первое бронирование — должно пройти
+        Booking.objects.create(
+            date_start=start, date_end=end, room=self.room, user=self.user
+        )
+
+        # Попытка создать пересекающееся бронирование — должно выбросить IntegrityError
+        with pytest.raises(IntegrityError):
+            Booking.objects.create(
+                date_start=start
+                + timezone.timedelta(hours=12),  # пересекается с первым
+                date_end=end + timezone.timedelta(hours=12),
+                room=self.room,
+                user=self.user,
+            )
