@@ -25,7 +25,7 @@ class Room(models.Model):
         help_text="Стоимость комнаты за сутки",
     )
     capacity = models.IntegerField(
-        help_text="Колличесвто человек на которое расчитана комната",
+        help_text="Количество человек на которое рассчитана комната",
         blank=False,
         null=False,
         validators=[MinValueValidator(1)],

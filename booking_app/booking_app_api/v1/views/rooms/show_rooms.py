@@ -72,6 +72,12 @@ from booking_app_api.v1.serializers import RoomSerializer
     ],
 )
 class ShowRoomsApi(ListAPIView):
+    """
+    API endpoint - возвращает список из всех комнат,
+    с возможностью сортировки по полям price_per_day и capacity.
+
+    Каждый элемент списка содержит id, name, price_per_day, capacity.
+    """
     queryset = Room.objects.all()
     serializer_class = RoomSerializer
     filter_backends = [OrderingFilter]

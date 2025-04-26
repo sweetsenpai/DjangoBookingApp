@@ -61,6 +61,16 @@ from booking_app_api.v1.serializers import BookingSerializer
     },
 )
 class UserAllBookingApi(ListAPIView):
+    """
+    API endpoint для получения данных о всех бронированиях пользователя.
+
+    Endpoint доступен только для зарегистрированных пользователей.
+
+    Этот endpoint возвращает список объектов бронирования и связанную с ним комнату,
+    по его id.
+
+    Объект бронирования содержит в себе поля id, date_start, date_end, room(id, name, capacity, price_per_day).
+    """
     permission_classes = [IsAuthenticated]
     queryset = Booking.objects.all().prefetch_related("room")
     serializer_class = BookingSerializer

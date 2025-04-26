@@ -8,6 +8,7 @@ from booking_app_admin.models import Booking, Room
 
 def get_free_rooms(date_start: datetime, date_end: datetime) -> QuerySet:
     """
+    Поиск свободных комнат в заданный временной промежуток.
 
     :param date_start: дата заезда
     :param date_end: дата выезда
