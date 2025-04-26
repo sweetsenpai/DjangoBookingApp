@@ -28,8 +28,9 @@ jobs:
     
     - name: Upload coverage to Coveralls
       run: |
-        coveralls --service=github --repo-token ${{ secrets.COVERALLS_REPO_TOKEN }} < booking_app/coverage/coverage.xml
-
+        export COVERAGE_FILE=booking_app/coverage/coverage.xml
+        coveralls --service=github --repo-token ${{ secrets.COVERALLS_REPO_TOKEN }}
+      
     - name: Docker cleanup
       run: |
         docker-compose -f booking_app/docker-compose.test.yml down
