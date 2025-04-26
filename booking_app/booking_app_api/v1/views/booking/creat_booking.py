@@ -1,17 +1,15 @@
 import logging
 
+from booking_app_api.utils import BookingThrottle
+from booking_app_api.v1.serializers import BookingCreateSerializer
 from django.db import transaction
 from django.db.utils import IntegrityError
-
+from drf_spectacular.utils import (OpenApiExample, OpenApiResponse,
+                                   extend_schema)
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
-from drf_spectacular.utils import OpenApiExample, OpenApiResponse, extend_schema
-
-from booking_app_api.utils import BookingThrottle
-from booking_app_api.v1.serializers import BookingCreateSerializer
 
 logger = logging.getLogger(__name__)
 

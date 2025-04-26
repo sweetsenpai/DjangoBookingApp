@@ -24,6 +24,6 @@ LOGGING = {
     "version": 1,
     "disable_existing_loggers": True,  # Отключение всех логеров
 }
-STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles_test')
+STATICFILES_STORAGE = "django.contrib.staticfiles.storage.StaticFilesStorage"
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles_test")
 STATICFILES_DIRS = []
