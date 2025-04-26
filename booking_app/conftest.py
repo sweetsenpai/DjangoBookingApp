@@ -1,6 +1,4 @@
-from django.apps import apps
 from django.conf import settings
-from django.db import connection
 
 import pytest
 
@@ -14,5 +12,5 @@ def django_db_setup():
         "PASSWORD": "postgres",
         "HOST": "testdb",
         "PORT": "5432",
-        "ATOMIC_REQUESTS": True,
+        "ATOMIC_REQUESTS": False,
     }

@@ -71,6 +71,7 @@ class UserAllBookingApi(ListAPIView):
 
     Объект бронирования содержит в себе поля id, date_start, date_end, room(id, name, capacity, price_per_day).
     """
+
     permission_classes = [IsAuthenticated]
     queryset = Booking.objects.all().prefetch_related("room")
     serializer_class = BookingSerializer

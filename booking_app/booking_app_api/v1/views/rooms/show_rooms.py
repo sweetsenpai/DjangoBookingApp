@@ -78,6 +78,7 @@ class ShowRoomsApi(ListAPIView):
 
     Каждый элемент списка содержит id, name, price_per_day, capacity.
     """
+
     queryset = Room.objects.all()
     serializer_class = RoomSerializer
     filter_backends = [OrderingFilter]
