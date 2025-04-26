@@ -106,11 +106,23 @@ RestAPI приложение реализующее функционал:
 Используется `ListAPIView` для выдачи списка объектов и `OrderingFilter` с параметрами `ordering_fields = ["price_per_day", "capacity"]` для реализации фильтрации по цене и вместительности.
 Эндпоинт доступен для любых пользователей согласно с требованиями.
 ```python
-class ShowRoomsApi(ListAPIView):
-    queryset = Room.objects.all()
-    serializer_class = RoomSerializer
-    filter_backends = [OrderingFilter]
-    ordering_fields = ["price_per_day", "capacity"]
+class UserAllBookingApi(ListAPIView):
+    """
+    API endpoint для получения данных о всех бронированиях пользователя.
+    
+    Endpoint доступен только для зарегистрированных пользователей.
+    
+    Этот endpoint возвращает список объектов бронирования и связанную с ним комнату,
+    по его id.
+
+    Объект бронирования содержит в себе поля id, date_start, date_end, room(id, name, capacity, price_per_day).
+    """
+    permission_classes = [IsAuthenticated]
+    queryset = Booking.objects.all().prefetch_related("room")
+    serializer_class = BookingSerializer
+
+    def get_queryset(self):
+        return Booking.objects.filter(user=self.request.user).prefetch_related("room")
 ```
 ![документация фильтр комнат](images/api_filter_rooms.png)
 ---
@@ -127,6 +139,14 @@ class ShowRoomsApi(ListAPIView):
 
 ```python
 def get_free_rooms(date_start: datetime, date_end: datetime) -> QuerySet:
+    """
+    Поиск свободных комнат в заданный временной промежуток.
+     
+    :param date_start: дата заезда
+    :param date_end: дата выезда
+    :return: возвращает QuerySet с доступными комнатами по заданым параметрам
+    """
+
     busy_rooms = Booking.objects.filter(
         Q(date_start__lt=date_end) & Q(date_end__gt=date_start)
     ).values_list("room_id", flat=True)
@@ -157,16 +177,29 @@ class RoomSearchParamsSerializer(serializers.Serializer):
 Код всего эндпоинта:
 ```python
 class SearchFreeRoomApi(APIView):
+    """
+    API endpoint для поиска доступных комнат.
+
+    Этот endpoint предоставляет возможность получить список свободных комнат
+    для аренды в заданном временном промежутке. Пользователь должен
+    указать начальную и конечную даты бронирования, а также может
+    дополнительно задать вместимость комнаты. 
+    
+    Параметры запроса (query parameters):
+    - date_start (обязательный): Начальная дата бронирования в формате YYYY-MM-DD.
+    - date_end (обязательный): Конечная дата бронирования в формате YYYY-MM-DD.
+    - capacity (необязательный): Минимальная требуемая вместимость комнаты.
+    """
 
     def get(self, request):
         serializer = RoomSearchParamsSerializer(data=request.query_params)
-        if not serializer.is_valid(raise_exception=True):
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        serializer.is_valid(raise_exception=True)
 
         validated = serializer.validated_data
         date_start = validated["date_start"]
         date_end = validated["date_end"]
         capacity = validated["capacity"]
+
         free_rooms = get_free_rooms(date_start, date_end).filter(capacity__gte=capacity)
         serializer = RoomSerializer(free_rooms, many=True)
 
@@ -205,11 +238,36 @@ class SearchFreeRoomApi(APIView):
 Сам код эндпоинта:
 ```python
 class CreateBookingApi(APIView):
+    """
+    API для создания новой брони.
+
+    Этот API позволяет авторизованным пользователям создавать новые бронирования для комнат на заданные даты.
+    Бронь создается с указанием даты начала, окончания и id номера. В случае ошибок, возвращаются соответствующие сообщения
+    с кодами статуса.
+
+    Валидация включает проверку существования комнаты, формата дат и пересечения броней.
+    """
     permission_classes = [IsAuthenticated]
     throttle_classes = [BookingThrottle]
     serializer_class = BookingCreateSerializer
 
     def post(self, request):
+        """
+        Метод для создания новой брони.
+    
+        Этот метод обрабатывает POST-запрос для создания новой брони. 
+        После успешной валидации данных, бронь сохраняется в базе данных. 
+        Возможные коды ответа:
+        - 201: Успешное создание новой брони.
+        - 400: Ошибка валидации данных.
+        - 409: Конфликт. Комната уже забронирована для указанных дат.
+        - 503: Непредвиденная ошибка сервиса.
+    
+        Параметры:
+        - room (int): Идентификатор комнаты.
+        - date_start (datetime): Начало брони.
+        - date_end (datetime): Конец брони.
+        """
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         try:
@@ -257,6 +315,16 @@ class CreateBookingApi(APIView):
 
 ```python
 class UserAllBookingApi(ListAPIView):
+    """
+    API endpoint для получения данных о всех бронированиях пользователя.
+    
+    Endpoint доступен только для зарегистрированных пользователей.
+    
+    Этот endpoint возвращает список объектов бронирования и связанную с ним комнату,
+    по его id.
+
+    Объект бронирования содержит в себе поля id, date_start, date_end, room(id, name, capacity, price_per_day).
+    """
     permission_classes = [IsAuthenticated]
     queryset = Booking.objects.all().prefetch_related("room")
     serializer_class = BookingSerializer
@@ -310,6 +378,16 @@ class IsOwnerOrSuperUser(BasePermission):
 Код:
 ```python
 class UserBookingApi(RetrieveDestroyAPIView):
+    """
+    API endpoint для получения данных о бронировании с возможностью удаления брони.
+    
+    Endpoint доступен только для владельца брони и суперпользователя.
+    
+    Этот endpoint возвращает объект бронирования и связанную с ним комнату,
+    по его id, с помощью метода delete можно удалить бронирование.
+
+    Объект бронирования содержит в себе поля id, date_start, date_end, room(id, name, capacity, price_per_day).
+    """
     queryset = Booking.objects.all().select_related("room")
     serializer_class = BookingSerializer
     permission_classes = [IsOwnerOrSuperUser]
@@ -350,6 +428,17 @@ path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh")
 Код:
 ```python
 class UserRegistrationApi(generics.CreateAPIView):
+    """
+    API эндпоинт для регистрации нового пользователя.
+    
+    Данный эндпоинт создает нового пользователя с предоставленными данными (username, password, password2, email), 
+    валидирует их и возвращает access_token при успешной регистрации.
+    
+    
+    Примечание:
+    - Этот эндпоинт доступен без авторизации.
+    - Данные в поле password должны удовлетворять требованиям безопасности (минимальная длина, сложность).
+    """
     queryset = User.objects.all()
     permission_classes = [AllowAny]
     serializer_class = RegistrationSerializer

@@ -91,6 +91,17 @@ logger = logging.getLogger(__name__)
     },
 )
 class UserRegistrationApi(generics.CreateAPIView):
+    """
+    API эндпоинт для регистрации нового пользователя.
+    
+    Данный эндпоинт создает нового пользователя с предоставленными данными (username, password, password2, email),
+    валидирует их и возвращает access_token при успешной регистрации.
+    
+
+    Примечание:
+    - Этот эндпоинт доступен без авторизации.
+    - Данные в поле password должны удовлетворять требованиям безопасности (минимальная длина, сложность).
+    """
     queryset = User.objects.all()
     permission_classes = [AllowAny]
     serializer_class = RegistrationSerializer

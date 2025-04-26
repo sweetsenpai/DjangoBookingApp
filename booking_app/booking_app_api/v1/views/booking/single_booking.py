@@ -129,6 +129,16 @@ from booking_app_api.v1.serializers import BookingSerializer
     ),
 )
 class UserBookingApi(RetrieveDestroyAPIView):
+    """
+    API endpoint для получения данных о бронировании с возможностью удаления брони.
+
+    Endpoint доступен только для владельца брони и суперпользователя.
+
+    Этот endpoint возвращает объект бронирования и связанную с ним комнату,
+    по его id, с помощью метода delete можно удалить бронирование.
+
+    Объект бронирования содержит в себе поля id, date_start, date_end, room(id, name, capacity, price_per_day).
+    """
     queryset = Booking.objects.all().select_related("room")
     serializer_class = BookingSerializer
     permission_classes = [IsOwnerOrSuperUser]

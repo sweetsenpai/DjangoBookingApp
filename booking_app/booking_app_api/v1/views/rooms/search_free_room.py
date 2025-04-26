@@ -59,6 +59,19 @@ from booking_app_api.v1.serializers import RoomSearchParamsSerializer, RoomSeria
     ],
 )
 class SearchFreeRoomApi(APIView):
+    """
+    API endpoint для поиска доступных комнат.
+
+    Этот endpoint предоставляет возможность получить список свободных комнат
+    для аренды в заданном временном промежутке. Пользователь должен
+    указать начальную и конечную даты бронирования, а также может
+    дополнительно задать вместимость комнаты. 
+    
+    Параметры запроса (query parameters):
+    - date_start (обязательный): Начальная дата бронирования в формате YYYY-MM-DD.
+    - date_end (обязательный): Конечная дата бронирования в формате YYYY-MM-DD.
+    - capacity (необязательный): Минимальная требуемая вместимость комнаты.
+    """
 
     def get(self, request):
         serializer = RoomSearchParamsSerializer(data=request.query_params)
