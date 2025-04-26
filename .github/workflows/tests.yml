@@ -30,8 +30,7 @@ jobs:
       env:
         COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
       run: |
-        cd booking_app
-        coveralls
+        coveralls --coverage-file=booking_app/coverage/coverage.xml
       
     - name: Docker cleanup
       run: |
