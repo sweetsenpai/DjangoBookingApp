@@ -2,7 +2,7 @@ import logging
 
 from booking_app_api.utils import UserRegistrationThrottle
 from booking_app_api.v1.serializers import RegistrationSerializer
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.db import transaction
 from drf_spectacular.utils import (OpenApiExample, OpenApiResponse,
                                    extend_schema)
@@ -101,7 +101,7 @@ class UserRegistrationApi(generics.CreateAPIView):
     - Данные в поле password должны удовлетворять требованиям безопасности (минимальная длина, сложность).
     """
 
-    queryset = User.objects.all()
+    queryset = get_user_model().objects.all()
     permission_classes = [AllowAny]
     serializer_class = RegistrationSerializer
     throttle_classes = [UserRegistrationThrottle]

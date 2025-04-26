@@ -1,9 +1,10 @@
-from datetime import datetime, timezone
+from datetime import datetime
 from decimal import Decimal
-from django.utils import timezone
+
 import pytest
 from booking_app_admin.models import Booking, Room
 from django.urls import reverse
+from django.utils import timezone
 from django.utils.timezone import make_aware
 
 
@@ -86,10 +87,13 @@ def test_free_rooms_validation_error(client):
 @pytest.mark.django_db(transaction=True, reset_sequences=True)
 def test_free_rooms_wrong_data_end_data_less_start(client):
     url = reverse("search-free-rooms")
-    response = client.get(url, {
-        "date_start": datetime.now() + timezone.timedelta(days=2),
-        "date_end": datetime.now() - timezone.timedelta(days=1),
-    })
+    response = client.get(
+        url,
+        {
+            "date_start": datetime.now() + timezone.timedelta(days=2),
+            "date_end": datetime.now() - timezone.timedelta(days=1),
+        },
+    )
     assert response.status_code == 400
 
 
@@ -97,10 +101,13 @@ def test_free_rooms_wrong_data_end_data_less_start(client):
 def test_free_rooms_end_date_in_past(client):
     url = reverse("search-free-rooms")
     today = timezone.now()
-    response = client.get(url, {
-        "date_start": (today - timezone.timedelta(days=10)).isoformat(),
-        "date_end": (today - timezone.timedelta(days=5)).isoformat(),
-    })
+    response = client.get(
+        url,
+        {
+            "date_start": (today - timezone.timedelta(days=10)).isoformat(),
+            "date_end": (today - timezone.timedelta(days=5)).isoformat(),
+        },
+    )
     assert response.status_code == 400
 
 

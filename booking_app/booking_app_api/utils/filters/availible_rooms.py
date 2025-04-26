@@ -1,8 +1,7 @@
-from datetime import datetime, time
+from datetime import datetime
 
 from booking_app_admin.models import Booking, Room
 from django.db.models import Q, QuerySet
-from django.utils.timezone import get_current_timezone, make_aware
 
 
 def get_free_rooms(date_start: datetime, date_end: datetime) -> QuerySet:
