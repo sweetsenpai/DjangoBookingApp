@@ -173,7 +173,5 @@ cython_debug/
 # PyPI configuration file
 .pypirc
 
-**/migrations/
-!**/migrations/__init__.py
 /booking_app/pgdata/
 /booking_app/staticfiles/
