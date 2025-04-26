@@ -22,12 +22,6 @@ jobs:
       run: |
         docker-compose -f booking_app/docker-compose.test.yml up --build --abort-on-container-exit
 
-    - name: Upload coverage report to Codecov
-      uses: booking_app/codecov-action@v3
-      with:
-        file: ./coverage.xml
-        fail_ci_if_error: true
-
     - name: Docker cleanup
       run: |
         docker-compose -f booking_app/docker-compose.test.yml down
