@@ -14,8 +14,8 @@ jobs:
       run: pip install pylint-django
 
     - name: Checking code
-      run: cd booking_app
-           pylint .
+      run: pylint booking_app/
+           
       
 
       
