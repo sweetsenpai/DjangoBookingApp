@@ -48,7 +48,7 @@ RestAPI приложение реализующее функционал:
 
 ### 🌳Структура проекта
 - **[`🗂booking_app/`](booking_app/booking_app)** — Модуль с настройками:
-    - ⚙️ [`settings_prod`](booking_app/booking_app/settings_prod.py) — Оснавные настройки Django.
+    - ⚙️ [`settings_prod`](booking_app/booking_app/settings_prod.py) — Основные настройки Django.
     - ⚙️ [`settings_dev`](booking_app/booking_app/settings_dev.py) — Настройки Django для разработки.
     - ⚙️ [`settings_dev`](booking_app/booking_app/settings_test.py) — Настройки Django для тестирования.
 - **[`🗂booking_app_admin/`](booking_app/booking_app_admin)** — Модуль с моделями и настройками панели администратора:
@@ -56,7 +56,7 @@ RestAPI приложение реализующее функционал:
   - 🧙‍♂️ [`admin`](booking_app/booking_app_admin/admin.py) — Настройки панели администратора.
   - 🤖 [`tests`](booking_app/booking_app_admin/tests) — Тесты моделей.
 - **[`🗂booking_app_api/`](booking_app/booking_app_api)** — Модуль с api:
-  - 📌 [`🗂v1`](booking_app/booking_app_api/v1) — Основной модуль текущего приложения, вынесен в отдльную папку для поддержки версионирования.
+  - 📌 [`🗂v1`](booking_app/booking_app_api/v1) — Основной модуль текущего приложения, вынесен в отдельную папку для поддержки версионирования.
   - - 🔪 [`serializers`](booking_app/booking_app_api/v1/serializers) — Сериализаторы.
   - -  💻[`views`](booking_app/booking_app_api/v1/views) — Views API.
   - 🤖 [`tests`](booking_app/booking_app_api/tests) — Тесты.
