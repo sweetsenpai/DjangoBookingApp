@@ -21,6 +21,10 @@ jobs:
     - name: Build and run pytest container
       run: |
         docker-compose -f booking_app/docker-compose.test.yml up --build --abort-on-container-exit
+
+    - name: Install Сoveralls dependencies
+      run: |
+        pip install coveralls
     
     - name: Upload coverage to Coveralls
       run: |
