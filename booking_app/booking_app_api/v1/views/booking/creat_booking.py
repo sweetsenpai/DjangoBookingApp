@@ -106,38 +106,34 @@ class CreateBookingApi(APIView):
 
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
-        if serializer.is_valid():
-            try:
-                with transaction.atomic():
-                    serializer.validated_data["user"] = request.user
-                    serializer.save()
-                    logger.info(
-                        f"Польщователь с id  {request.user.id} создал новое бронирование {serializer.data}"
-                    )
-                    return Response(serializer.data, status=status.HTTP_201_CREATED)
-            except ValidationError:
-                raise
-            # Обработка исключения от postgresql при попытке создания пересикающихся броней.
-            except IntegrityError:
-                return Response(
-                    {
-                        "detail": "Комната уже забронирована. Попробуйте изменить даты бронирования или выбирете другую комнату."
-                    },
-                    status=status.HTTP_409_CONFLICT,
+        serializer.is_valid(raise_exception=True)
+        try:
+            with transaction.atomic():
+                serializer.validated_data["user"] = request.user
+                serializer.save()
+                logger.info(
+                    f"Пользователь с id  {request.user.id} создал новое бронирование {serializer.data}"
                 )
-            except Exception as e:
-                logger.error(
-                    "Во время создания нового бронирования произошла не предвиденая ошибка:\n"
-                    f"user: {request.user}\n"
-                    f"data: {request.data}\n"
-                    f"error: {str(e)}\n"
-                    f"error_type: {type(e)}"
-                )
-                return Response(
-                    {
-                        "detail": "Сервис временно не доступен.\nПожалйста, перезагрузите страницу и попробуйте ещё раз."
-                    },
-                    status=status.HTTP_503_SERVICE_UNAVAILABLE,
-                )
-
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+        # Обработка исключения от postgresql при попытке создания пересекающихся броней.
+        except IntegrityError:
+            return Response(
+                {
+                    "detail": "Комната уже забронирована. Попробуйте изменить даты бронирования или выберите другую комнату."
+                },
+                status=status.HTTP_409_CONFLICT,
+            )
+        except Exception as e:
+            logger.error(
+                "Во время создания нового бронирования произошла непредвиденная ошибка:\n"
+                f"user: {request.user}\n"
+                f"data: {request.data}\n"
+                f"error: {str(e)}\n"
+                f"error_type: {type(e)}"
+            )
+            return Response(
+                {
+                    "detail": "Сервис временно недоступен.Пожалуйста, перезагрузите страницу и попробуйте ещё раз."
+                },
+                status=status.HTTP_503_SERVICE_UNAVAILABLE,
+            )

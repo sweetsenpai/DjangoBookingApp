@@ -62,13 +62,13 @@ class SearchFreeRoomApi(APIView):
 
     def get(self, request):
         serializer = RoomSearchParamsSerializer(data=request.query_params)
-        if not serializer.is_valid():
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        serializer.is_valid(raise_exception=True)
 
         validated = serializer.validated_data
         date_start = validated["date_start"]
         date_end = validated["date_end"]
         capacity = validated["capacity"]
+
         free_rooms = get_free_rooms(date_start, date_end).filter(capacity__gte=capacity)
         serializer = RoomSerializer(free_rooms, many=True)
 
