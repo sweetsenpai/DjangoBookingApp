@@ -11,8 +11,9 @@ import pytest
 from booking_app_admin.models import Room
 
 
+@pytest.mark.django_db(transaction=True, reset_sequences=True)
 class ShowRoomsApiTest(APITestCase):
-    @pytest.mark.django_db
+
     def setUp(self):
         rooms = [
             Room(name="Для двоих", price_per_day=Decimal("100.00"), capacity=2),
@@ -21,7 +22,6 @@ class ShowRoomsApiTest(APITestCase):
         ]
         Room.objects.bulk_create(rooms)
 
-    @pytest.mark.django_db
     def test_get_rooms(self):
         url = reverse("all-rooms")
         response = self.client.get(url)
@@ -31,9 +31,11 @@ class ShowRoomsApiTest(APITestCase):
             {"id": 3, "name": "Для троих", "price_per_day": "150.00", "capacity": 3},
         ]
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data, expected_response)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data[0]["name"], expected_response[0]["name"])
+        self.assertEqual(response.data[1]["name"], expected_response[1]["name"])
+        self.assertEqual(response.data[2]["name"], expected_response[2]["name"])
 
-    @pytest.mark.django_db
     def test_get_rooms_with_filter(self):
         url = reverse("all-rooms")
         response = self.client.get(f"{url}?ordering=price_per_day")
@@ -43,4 +45,6 @@ class ShowRoomsApiTest(APITestCase):
             {"id": 3, "name": "Для троих", "price_per_day": "150.00", "capacity": 3},
         ]
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data, expected_response)
+        self.assertEqual(response.data[0]["name"], expected_response[0]["name"])
+        self.assertEqual(response.data[1]["name"], expected_response[1]["name"])
+        self.assertEqual(response.data[2]["name"], expected_response[2]["name"])

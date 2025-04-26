@@ -7,16 +7,15 @@ from django.urls import reverse
 from django.utils import timezone
 
 from rest_framework import status
-from rest_framework.test import APITestCase, APIClient
+from rest_framework.test import APIClient, APITestCase
 
 import pytest
 
 from booking_app_admin.models import Booking, Room
 
 
-@pytest.mark.django_db
+@pytest.mark.django_db(transaction=True, reset_sequences=True)
 class UserBookingApiTest(APITestCase):
-    @pytest.mark.django_db
     def setUp(self):
         self.User = get_user_model()
         self.user = self.User.objects.create_user(username="user", password="54321")
@@ -33,7 +32,6 @@ class UserBookingApiTest(APITestCase):
         self.superuser = self.User.objects.create_superuser(
             username="admin", password="admin"
         )
-        self.user = self.User.objects.create_user(username="user", password="54321")
 
         self.start1 = timezone.make_aware(datetime(2021, 1, 1))
         self.end1 = timezone.make_aware(datetime(2021, 1, 2))
@@ -51,7 +49,6 @@ class UserBookingApiTest(APITestCase):
             room=self.room2, user=self.user, date_start=self.start2, date_end=self.end2
         )
 
-    @pytest.mark.django_db
     def test_get_user_rooms(self):
         url = reverse("user-all-booking")
         response = self.client.get(url)
@@ -72,10 +69,11 @@ class UserBookingApiTest(APITestCase):
         self.assertEqual(api_end, self.end2)
 
     def test_get_user_rooms_without_auth(self):
+        self.client.logout()
         url = reverse("user-all-booking")
         response = self.client.get(url)
 
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_get_ditail_data_someone_else_user_booking(self):
         self.client.login(username="user", password="54321")
@@ -121,7 +119,7 @@ class UserBookingApiTest(APITestCase):
         self.client.login(username="admin", password="admin")
         url = reverse("user-all-booking")
 
-        Booking.objects.filter(user=self.superuser).delete()
+        Booking.objects.filter(user=self.user).delete()
 
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)

@@ -139,6 +139,7 @@ class UserBookingApi(RetrieveDestroyAPIView):
 
     Объект бронирования содержит в себе поля id, date_start, date_end, room(id, name, capacity, price_per_day).
     """
+
     queryset = Booking.objects.all().select_related("room")
     serializer_class = BookingSerializer
     permission_classes = [IsOwnerOrSuperUser]
