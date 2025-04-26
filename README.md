@@ -1,4 +1,4 @@
-[![Coverage Status](https://coveralls.io/repos/github/sweetsenpai/DjangoBookingApp/badge.svg)](https://coveralls.io/github/sweetsenpai/DjangoBookingApp)
+[![Coverage Status](https://coveralls.io/repos/github/sweetsenpai/DjangoBookingApp/badge.svg?t=12345)](https://coveralls.io/github/sweetsenpai/DjangoBookingApp)
 
 # DjangoBookingApp
 ## 📝Краткая информация
@@ -541,7 +541,9 @@ docker-compose -f docker-compose.test.yml up --build
 При запуске тестов так же запускается pylint. На данный моментоценка кода `9.6/10`.
 С конфигурацией pytest можно ознакомиться тут:
 * [pylintrc📝](booking_app/.pylintrc)
+* 
 ### Автоформатирование кода
+
 На проекте использовались isort и black.
 Их конфигурация находится тут: 
 * [pyproject.toml📝](booking_app/pyproject.toml)
@@ -554,4 +556,3 @@ docker-compose -f docker-compose.test.yml up --build
 * `senrty` - для мониторинга ошибок.
 * `grafana + prometheus` - для мониторинга.
 * `flower` - для мониторинга `celery`.
-
