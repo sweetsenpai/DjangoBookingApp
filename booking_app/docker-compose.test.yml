@@ -10,11 +10,10 @@ services:
       bash -c "
       python manage.py makemigrations --noinput &&
       python manage.py migrate &&
-      pytest &&
-      ls -l /booking_app/coverage
+      pytest      
       "
     volumes:
-      - ./coverage:/booking_app/coverage
+      - .:/booking_app
     environment:
       - DJANGO_SETTINGS_MODULE=booking_app.settings_test
       - DEBUG=1
