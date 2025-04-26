@@ -268,7 +268,7 @@ class UserAllBookingApi(ListAPIView):
     def get_queryset(self):
         return Booking.objects.filter(user=self.request.user).prefetch_related("room")
 ```
-
+![документация бронирование комнта](images/api_show_booking.png)
 ---
 ## 🧙‍♂️Суперпользователь
 **Задача**
@@ -293,7 +293,7 @@ class BookingAdmin(admin.ModelAdmin):
     list_filter = ("room", "user", "date_start")
     search_fields = ("room__name", "user__username")
 ```
-![документация просмотр броней](images/api_show_booking.png)
+![документация просмотр броней](images/admin.png)
 ---
 ## Отмена броней
 **Задача**
