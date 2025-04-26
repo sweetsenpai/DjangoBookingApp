@@ -120,7 +120,7 @@ class UserRegistrationApi(generics.CreateAPIView):
         except ValidationError:
             raise
 
-        except Exception as e:
+        except Exception as e:  # pragma: no cover
             logger.error(
                 "Вовремя регистрации нового пользователя проищошла непредвиденая ошибка.\n"
                 f"data: {request.data}\n"

@@ -147,7 +147,7 @@ class CreateBookingApi(APIView):
                 },
                 status=status.HTTP_409_CONFLICT,
             )
-        except Exception as e:
+        except Exception as e:  # pragma: no cover
             logger.error(
                 "Во время создания нового бронирования произошла непредвиденная ошибка:\n"
                 f"user: {request.user}\n"
