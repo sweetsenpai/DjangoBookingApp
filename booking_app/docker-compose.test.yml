@@ -13,7 +13,7 @@ services:
       pytest
       "
     volumes:
-      - ./coverage.xml:/booking_app/coverage.xml
+      - ./coverage:/booking_app/coverage
     environment:
       - DJANGO_SETTINGS_MODULE=booking_app.settings_test
       - DEBUG=1
