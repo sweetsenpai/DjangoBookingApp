@@ -66,7 +66,7 @@ RestAPI приложение реализующее функционал:
 - **[`⚓️docker-compose.test.yml`](booking_app/docker-compose.test.yml)** — `docker-compose` для тестирования.
 - **[`🐳Docker.prod`](booking_app/Dockerfile.prod)** — `Dockerfile` для продакшн среды.
 - **[`🐳Docker.dev`](booking_app/Dockerfile.dev)** — `Dockerfile` для разработки и тестов.
-- **[`📀init.sql`](booking_app/init.sql)** — init-файл для postresql, для загрузки необходимых для работы расширений.
+- **[`📀init.sql`](booking_app/init.sql)** — init-файл для postgresql, для загрузки необходимых для работы расширений.
 - **[`📚logs/`](booking_app/logs)** — Папка для хранения логов, реализована ротация файлов логирования.
 - - **[`🟥critical.log`]** — логирование критических ошибок.
 - - **[`🟨error.log`]** — логирование ошибок.
@@ -152,23 +152,18 @@ RestAPI приложение реализующее функционал:
 Эндпоинт доступен для любых пользователей согласно с требованиями.
 
 ```python
-class UserAllBookingApi(ListAPIView):
+class ShowRoomsApi(ListAPIView):
     """
-    API endpoint для получения данных о всех бронированиях пользователя.
-    
-    Endpoint доступен только для зарегистрированных пользователей.
-    
-    Этот endpoint возвращает список объектов бронирования и связанную с ним комнату,
-    по его id.
+    API endpoint - возвращает список из всех комнат,
+    с возможностью сортировки по полям price_per_day и capacity.
 
-    Объект бронирования содержит в себе поля id, date_start, date_end, room(id, name, capacity, price_per_day).
+    Каждый элемент списка содержит id, name, price_per_day, capacity.
     """
-    permission_classes = [IsAuthenticated]
-    queryset = Booking.objects.all().prefetch_related("room")
-    serializer_class = BookingSerializer
 
-    def get_queryset(self):
-        return Booking.objects.filter(user=self.request.user).prefetch_related("room")
+    queryset = Room.objects.all()
+    serializer_class = RoomSerializer
+    filter_backends = [OrderingFilter]
+    ordering_fields = ["price_per_day", "capacity"]
 ```
 ![документация фильтр комнат](images/api_filter_rooms.png)
 ---
