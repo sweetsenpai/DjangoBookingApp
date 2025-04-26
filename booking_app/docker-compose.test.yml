@@ -12,6 +12,8 @@ services:
       python manage.py migrate &&
       pytest
       "
+    volumes:
+      - ./:/app
     environment:
       - DJANGO_SETTINGS_MODULE=booking_app.settings_test
       - DEBUG=1
