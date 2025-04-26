@@ -26,10 +26,15 @@ jobs:
       run: |
         pip install coveralls
     
-    - name: Upload coverage to Coveralls
+    - name: Copy coverage file from container
       run: |
-        export COVERAGE_FILE=booking_app/coverage/coverage.xml
-        coveralls --service=github --repo-token ${{ secrets.COVERALLS_REPO_TOKEN }}
+        docker cp $(docker ps -aqf "name=pytest"):/booking_app/.coverage .coverage
+    
+    - name: Upload coverage to Coveralls
+      env:
+        COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
+      run: |
+        coveralls
       
     - name: Docker cleanup
       run: |
