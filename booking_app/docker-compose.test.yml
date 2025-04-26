@@ -10,7 +10,8 @@ services:
       bash -c "
       python manage.py makemigrations --noinput &&
       python manage.py migrate &&
-      pytest      
+      pytest &&
+      coverage xml
       "
     volumes:
       - .:/booking_app

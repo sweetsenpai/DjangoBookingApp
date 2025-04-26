@@ -175,3 +175,4 @@ cython_debug/
 
 /booking_app/pgdata/
 /booking_app/staticfiles/
+/booking_app/coverage/
