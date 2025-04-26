@@ -1,4 +1,4 @@
-[![Coverage Status](https://coveralls.io/repos/github/sweetsenpai/DjangoBookingApp/badge.svg)](https://coveralls.io/github/sweetsenpai/DjangoBookingApp)
+[![Coverage Status](https://coveralls.io/repos/github/sweetsenpai/DjangoBookingApp/badge.svg?t=12345)](https://coveralls.io/github/sweetsenpai/DjangoBookingApp)
 
 # DjangoBookingApp
 ## 📝Краткая информация
