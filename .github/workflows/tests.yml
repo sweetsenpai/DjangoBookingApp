@@ -21,10 +21,6 @@ jobs:
     - name: Build and run pytest container
       run: |
         docker-compose -f booking_app/docker-compose.test.yml up --build --abort-on-container-exit
-      
-    - name: Docker cleanup
-      run: |
-        docker-compose -f booking_app/docker-compose.test.yml down
-    
+        
     - name: Coveralls
       uses: coverallsapp/github-action@v2
