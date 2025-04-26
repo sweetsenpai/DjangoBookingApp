@@ -112,7 +112,7 @@ class ShowRoomsApi(ListAPIView):
     filter_backends = [OrderingFilter]
     ordering_fields = ["price_per_day", "capacity"]
 ```
-![документация фильтр комнат](относительный/путь/к/картинке.png)
+![документация фильтр комнат](images/api_filter_rooms.png)
 ---
 ## 🔎Поиск комнат
 **Задача**
@@ -172,6 +172,7 @@ class SearchFreeRoomApi(APIView):
 
         return Response(serializer.data)
 ```
+![документация поиск комнат](images/api_search_rooms.png)
 ---
 ## 🔒Бронирование комнат
 **Задача**
@@ -246,6 +247,7 @@ class CreateBookingApi(APIView):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 ```
+![документация бронирование комнта](images/api_create_booking.png)
 ---
 
 ## 👀Просмотр броней
@@ -291,6 +293,7 @@ class BookingAdmin(admin.ModelAdmin):
     list_filter = ("room", "user", "date_start")
     search_fields = ("room__name", "user__username")
 ```
+![документация просмотр броней](images/api_show_booking.png)
 ---
 ## Отмена броней
 **Задача**
@@ -321,6 +324,7 @@ class UserBookingApi(RetrieveDestroyAPIView):
         self.perform_destroy(instance)
         return Response({"detail": response_text}, status=status.HTTP_200_OK)
 ```
+![документация отмена брони](images/api_delete_booking.png)
 ---
 ## 🛂Регистрация и авторизация
 **Задача**
@@ -337,6 +341,8 @@ class UserBookingApi(RetrieveDestroyAPIView):
 path("api/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
 path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh")
 ```
+![документация авторизация](images/api_token.png)
+![документация авторизация](images/api_refresh_token.png)
 Логика выхода по заданию не нужна, а на практике решается на стороне фронтенда, через бэкенд решается костылями с черным списком.
 
 Для регистрации реализован следующий эндпоинт. Тут я всю логику создания нового пользователя обернул в транзакцию - сделано это для того, чтобы пр ошибке не связанной с работой бд пользователь не получал 
@@ -378,6 +384,7 @@ class UserRegistrationApi(generics.CreateAPIView):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
 ```
+![документация авторизация](images/api_registration.png)
 ---
 
 ## 👋Приветствуется
