@@ -2,7 +2,7 @@
 [![Run Pytest with Docker](https://github.com/sweetsenpai/DjangoBookingApp/actions/workflows/tests.yml/badge.svg)](https://github.com/sweetsenpai/DjangoBookingApp/actions/workflows/tests.yml)
 [![Django](https://img.shields.io/badge/Django-5.2-green?logo=django&logoColor=white)](https://www.djangoproject.com/)
 [![DRF](https://img.shields.io/badge/DRF-3.16-blue?logo=django&logoColor=white)](https://www.django-rest-framework.org/)
-
+[![Python 3.10](https://img.shields.io/badge/python-3.12%2B-orange?logo=python)](https://www.python.org/downloads/release/python-3100/)
 
 # DjangoBookingApp
 ## 📝Краткая информация
