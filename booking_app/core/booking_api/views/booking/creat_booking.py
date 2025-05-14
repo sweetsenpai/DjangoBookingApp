@@ -4,8 +4,7 @@ from core.booking_api.serializers import BookingCreateSerializer
 from core.utils import BookingThrottle
 from django.db import transaction
 from django.db.utils import IntegrityError
-from drf_spectacular.utils import (OpenApiExample, OpenApiResponse,
-                                   extend_schema)
+from drf_spectacular.utils import OpenApiExample, OpenApiResponse, extend_schema
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response

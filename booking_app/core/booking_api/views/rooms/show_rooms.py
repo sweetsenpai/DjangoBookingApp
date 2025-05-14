@@ -2,8 +2,7 @@ from core.booking_api.serializers import RoomSerializer
 from core.filters.rooms_filters import RoomFilter
 from core.models import Room
 from django_filters.rest_framework import DjangoFilterBackend
-from drf_spectacular.utils import (OpenApiExample, OpenApiParameter,
-                                   extend_schema)
+from drf_spectacular.utils import OpenApiExample, OpenApiParameter, extend_schema
 from rest_framework.filters import OrderingFilter
 from rest_framework.viewsets import ReadOnlyModelViewSet
 

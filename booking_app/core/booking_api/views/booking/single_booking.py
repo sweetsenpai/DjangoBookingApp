@@ -1,9 +1,14 @@
 from core.booking_api.serializers import BookingSerializer
 from core.models import Booking
 from core.utils import IsOwnerOrSuperUser
-from drf_spectacular.utils import (OpenApiExample, OpenApiParameter,
-                                   OpenApiResponse, OpenApiTypes,
-                                   extend_schema, extend_schema_view)
+from drf_spectacular.utils import (
+    OpenApiExample,
+    OpenApiParameter,
+    OpenApiResponse,
+    OpenApiTypes,
+    extend_schema,
+    extend_schema_view,
+)
 from rest_framework import status
 from rest_framework.generics import RetrieveDestroyAPIView
 from rest_framework.response import Response

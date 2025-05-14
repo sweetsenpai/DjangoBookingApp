@@ -1,8 +1,7 @@
 from core.booking_api.serializers import BookingSerializer
 from core.models import Booking
 from drf_spectacular.types import OpenApiTypes
-from drf_spectacular.utils import (OpenApiExample, OpenApiResponse,
-                                   extend_schema)
+from drf_spectacular.utils import OpenApiExample, OpenApiResponse, extend_schema
 from rest_framework.generics import ListAPIView
 from rest_framework.permissions import IsAuthenticated
 
