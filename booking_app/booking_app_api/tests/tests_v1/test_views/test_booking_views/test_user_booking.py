@@ -2,7 +2,7 @@ from datetime import datetime
 from decimal import Decimal
 
 import pytest
-from booking_app_admin.models import Booking, Room
+from core.models import Booking, Room
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse

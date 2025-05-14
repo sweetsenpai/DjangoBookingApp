@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "booking_app_admin.apps.BookingAppAdminConfig",
+    "core.apps.CoreConfig",
     "booking_app_api.apps.BookingAppApiConfig",
     "rest_framework",
     "drf_spectacular",

@@ -2,7 +2,7 @@
 
 from decimal import Decimal
 
-import booking_app_admin.models
+import core.models
 import django.contrib.postgres.constraints
 import django.contrib.postgres.fields.ranges
 import django.core.validators
@@ -83,7 +83,7 @@ class Migration(migrations.Migration):
                     "room",
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,
-                        to="booking_app_admin.room",
+                        to="core.room",
                     ),
                 ),
             ],
@@ -92,7 +92,7 @@ class Migration(migrations.Migration):
                     django.contrib.postgres.constraints.ExclusionConstraint(
                         expressions=[
                             (
-                                booking_app_admin.models.TsTzRange(
+                                core.models.TsTzRange(
                                     "date_start",
                                     "date_end",
                                     django.contrib.postgres.fields.ranges.RangeBoundary(),

@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class BookingAppAdminConfig(AppConfig):
+class CoreConfig(AppConfig):
     default_auto_field = "django.db.models.BigAutoField"
-    name = "booking_app_admin"
+    name = "core"

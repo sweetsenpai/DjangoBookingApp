@@ -1,5 +1,5 @@
 import pytest
-from booking_app_admin.models import Room
+from core.models import Room
 from django.core.exceptions import ValidationError
 from django.test import TestCase
 

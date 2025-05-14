@@ -2,7 +2,7 @@ from datetime import datetime
 from decimal import Decimal
 
 import pytest
-from booking_app_admin.models import Booking, Room
+from core.models import Booking, Room
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.timezone import make_aware

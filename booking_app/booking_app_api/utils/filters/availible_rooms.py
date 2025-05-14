@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from booking_app_admin.models import Booking, Room
+from core.models import Booking, Room
 from django.db.models import Q, QuerySet
 
 

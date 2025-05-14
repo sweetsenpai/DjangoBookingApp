@@ -1,4 +1,4 @@
-from booking_app_admin.models import Room
+from core.models import Room
 from booking_app_api.v1.serializers import RoomSerializer
 from drf_spectacular.utils import (OpenApiExample, OpenApiParameter,
                                    extend_schema)

@@ -1,4 +1,4 @@
-from booking_app_admin.models import Room
+from core.models import Room
 from rest_framework import serializers
 
 
