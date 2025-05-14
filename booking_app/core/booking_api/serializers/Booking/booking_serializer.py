@@ -1,7 +1,7 @@
 import logging
 
+from core.filters import get_free_rooms
 from core.models import Booking
-from booking_app_api.utils.filters import get_free_rooms
 from rest_framework import serializers
 
 from ..Room.rooms_serializer import RoomSerializer

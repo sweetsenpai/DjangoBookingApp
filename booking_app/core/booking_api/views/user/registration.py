@@ -1,7 +1,7 @@
 import logging
 
-from booking_app_api.utils import UserRegistrationThrottle
-from booking_app_api.v1.serializers import RegistrationSerializer
+from core.utils import UserRegistrationThrottle
+from core.booking_api.serializers import RegistrationSerializer
 from django.contrib.auth import get_user_model
 from django.db import transaction
 from drf_spectacular.utils import (OpenApiExample, OpenApiResponse,

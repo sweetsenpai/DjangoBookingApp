@@ -21,5 +21,5 @@ from django.urls import include, path
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", include("booking_app_api.urls")),
-] + debug_toolbar_urls()
+    path("", include("core.urls")),
+]

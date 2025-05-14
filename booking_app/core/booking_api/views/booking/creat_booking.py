@@ -1,7 +1,7 @@
 import logging
 
-from booking_app_api.utils import BookingThrottle
-from booking_app_api.v1.serializers import BookingCreateSerializer
+from core.utils import BookingThrottle
+from core.booking_api.serializers import BookingCreateSerializer
 from django.db import transaction
 from django.db.utils import IntegrityError
 from drf_spectacular.utils import (OpenApiExample, OpenApiResponse,

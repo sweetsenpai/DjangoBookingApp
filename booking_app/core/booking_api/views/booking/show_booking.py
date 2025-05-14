@@ -1,5 +1,5 @@
+from core.booking_api.serializers import BookingSerializer
 from core.models import Booking
-from booking_app_api.v1.serializers import BookingSerializer
 from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import (OpenApiExample, OpenApiResponse,
                                    extend_schema)

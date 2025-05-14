@@ -56,10 +56,10 @@ RestAPI приложение реализующее функционал:
   - 🤖 [`tests`](booking_app/booking_app_admin/tests) — Тесты моделей.
 - **[`🗂booking_app_api/`](booking_app/booking_app_api)** — Модуль с api:
   - 📌 [`🗂v1`](booking_app/booking_app_api/v1) — Основной модуль текущего приложения, вынесен в отдльную папку для поддержки версионирования.
-  - - 🔪 [`serializers`](booking_app/booking_app_api/v1/serializers) — Сериализаторы.
-  - -  💻[`views`](booking_app/booking_app_api/v1/views) — Views API.
+  - - 🔪 [`serializers`](booking_app/core/booking_api/serializers) — Сериализаторы.
+  - -  💻[`views`](booking_app/core/booking_api/views) — Views API.
   - 🤖 [`tests`](booking_app/booking_app_api/tests) — Тесты.
-  - ⚒️ [`utils`](booking_app/booking_app_api/utils) — Вспомогательные утилиты для работы API.
+  - ⚒️ [`utils`](booking_app/core/utils) — Вспомогательные утилиты для работы API.
 - **[`⚓️docker-compose.prod.yml`](booking_app/docker-compose.prod.yml)** — `docker-compose` для продакшн среды.
 - **[`⚓️docker-compose.dev.yml`](booking_app/docker-compose.dev.yml)** — `docker-compose` для разработки.
 - **[`⚓️docker-compose.test.yml`](booking_app/docker-compose.test.yml)** — `docker-compose` для тестирования.

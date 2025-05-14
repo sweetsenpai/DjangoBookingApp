@@ -10,6 +10,7 @@ services:
       bash -c "
       python manage.py makemigrations --noinput &&
       python manage.py migrate &&
+      ls &&
       pytest &&
       coverage xml
       "
