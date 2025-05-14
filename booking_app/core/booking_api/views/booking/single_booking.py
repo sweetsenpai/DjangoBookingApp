@@ -1,6 +1,6 @@
-from core.utils import IsOwnerOrSuperUser
 from core.booking_api.serializers import BookingSerializer
 from core.models import Booking
+from core.utils import IsOwnerOrSuperUser
 from drf_spectacular.utils import (OpenApiExample, OpenApiParameter,
                                    OpenApiResponse, OpenApiTypes,
                                    extend_schema, extend_schema_view)

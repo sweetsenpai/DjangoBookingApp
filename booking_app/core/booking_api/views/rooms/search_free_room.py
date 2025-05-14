@@ -1,6 +1,6 @@
-from core.filters import get_free_rooms
 from core.booking_api.serializers import (RoomSearchParamsSerializer,
                                           RoomSerializer)
+from core.filters import get_free_rooms
 from drf_spectacular.utils import (OpenApiExample, OpenApiParameter,
                                    extend_schema)
 from rest_framework.response import Response

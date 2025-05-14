@@ -1,11 +1,11 @@
-from django.urls import path, include
+from django.urls import include, path
 from drf_spectacular.views import (SpectacularAPIView, SpectacularRedocView,
                                    SpectacularSwaggerView)
+from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import (TokenObtainPairView,
                                             TokenRefreshView)
-from rest_framework.routers import DefaultRouter
-from .booking_api.views import *
 
+from .booking_api.views import *
 
 router = DefaultRouter()
 router.register("api/all-rooms", ShowRoomsApi, basename="all-room")
@@ -23,9 +23,15 @@ urlpatterns = [
     path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
     # ROOMS API
     path("", include(router.urls)),
-    path("api/search-free-rooms/", SearchFreeRoomApi.as_view(), name="search-free-rooms"),
+    path(
+        "api/search-free-rooms/", SearchFreeRoomApi.as_view(), name="search-free-rooms"
+    ),
     # USER API
-    path("api/user/registration/", UserRegistrationApi.as_view(), name="user-registration"),
+    path(
+        "api/user/registration/",
+        UserRegistrationApi.as_view(),
+        name="user-registration",
+    ),
     # USER BOOKING API
     path("api/user/booking/", UserAllBookingApi.as_view(), name="user-all-booking"),
     path("api/user/booking/<int:pk>/", UserBookingApi.as_view(), name="user-booking"),

@@ -1,14 +1,11 @@
 from core.booking_api.serializers import RoomSerializer
-from core.models import Room
-
 from core.filters.rooms_filters import RoomFilter
+from core.models import Room
+from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import (OpenApiExample, OpenApiParameter,
                                    extend_schema)
-
 from rest_framework.filters import OrderingFilter
 from rest_framework.viewsets import ReadOnlyModelViewSet
-from django_filters.rest_framework import DjangoFilterBackend
-
 
 example_response_simple = [
     {
@@ -63,34 +60,35 @@ example_response_filtered = [
     }
 ]
 
+
 @extend_schema(
     summary="Список комнат с возможностью сортировки и фильтрации",
     description="Получить список всех комнат. Можно фильтровать по цене и вместимости, а также сортировать по полям `price_per_day`, `capacity`.",
     parameters=[
         OpenApiParameter(
-            name='min_price',
+            name="min_price",
             type=float,
             location=OpenApiParameter.QUERY,
-            description='Минимальная цена за день (price_per_day ≥ X)'
+            description="Минимальная цена за день (price_per_day ≥ X)",
         ),
         OpenApiParameter(
-            name='max_price',
+            name="max_price",
             type=float,
             location=OpenApiParameter.QUERY,
-            description='Максимальная цена за день (price_per_day ≤ X)'
+            description="Максимальная цена за день (price_per_day ≤ X)",
         ),
         OpenApiParameter(
-            name='capacity',
+            name="capacity",
             type=int,
             location=OpenApiParameter.QUERY,
-            description='Минимальная вместимость комнаты (capacity ≥ X)'
+            description="Минимальная вместимость комнаты (capacity ≥ X)",
         ),
         OpenApiParameter(
-            name='ordering',
+            name="ordering",
             type=str,
             location=OpenApiParameter.QUERY,
-            description='Поля для сортировки через запятую. Например: `price_per_day,-capacity`'
-        )
+            description="Поля для сортировки через запятую. Например: `price_per_day,-capacity`",
+        ),
     ],
     responses={200: RoomSerializer(many=True)},
     examples=[
@@ -108,8 +106,8 @@ example_response_filtered = [
             name="С фильтром: capacity=2",
             value=example_response_filtered,
             media_type="application/json",
-        )
-    ]
+        ),
+    ],
 )
 class ShowRoomsApi(ReadOnlyModelViewSet):
     """
@@ -125,6 +123,4 @@ class ShowRoomsApi(ReadOnlyModelViewSet):
     filter_backends = [DjangoFilterBackend, OrderingFilter]
     filterset_class = RoomFilter
     ordering_fields = ["price_per_day", "capacity"]
-    ordering = ['price_per_day']
-
-
+    ordering = ["price_per_day"]
