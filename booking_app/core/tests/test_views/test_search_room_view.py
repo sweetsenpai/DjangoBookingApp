@@ -67,8 +67,7 @@ def test_free_rooms_capacity_filter(client, test_bookings, test_rooms):
     url = reverse("room-list")
     response = client.get(
         url,
-        data=
-        {
+        data={
             "date_start": "2026-01-02",
             "date_end": "2026-01-03",
             "capacity": 2,
@@ -83,7 +82,9 @@ def test_free_rooms_capacity_filter(client, test_bookings, test_rooms):
 @pytest.mark.django_db(transaction=True, reset_sequences=True)
 def test_free_rooms_validation_error(client):
     url = reverse("room-list")
-    response = client.get(f"{url}", data={"date_start": "2021-01-03", "date_end": "2021-01-04"})
+    response = client.get(
+        f"{url}", data={"date_start": "2021-01-03", "date_end": "2021-01-04"}
+    )
     assert response.status_code == 400
 
 
@@ -92,8 +93,7 @@ def test_free_rooms_wrong_data_end_data_less_start(client):
     url = reverse("room-list")
     response = client.get(
         url,
-        data=
-        {
+        data={
             "date_start": datetime.now() + timezone.timedelta(days=2),
             "date_end": datetime.now() - timezone.timedelta(days=1),
         },
@@ -107,11 +107,9 @@ def test_free_rooms_end_date_in_past(client):
     today = timezone.now()
     response = client.get(
         url,
-        data=
-        {
+        data={
             "date_start": (today - timezone.timedelta(days=10)).isoformat(),
             "date_end": (today - timezone.timedelta(days=5)).isoformat(),
         },
     )
     assert response.status_code == 400
-

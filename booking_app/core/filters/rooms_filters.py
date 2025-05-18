@@ -52,4 +52,3 @@ class RoomFilter(filters.FilterSet):
 
         free_rooms = self.get_free_rooms(date_start_dt, date_end_dt)
         return queryset.filter(id__in=free_rooms.values_list("id", flat=True))
-

@@ -29,7 +29,7 @@ class UserCreateBookingApiTest(APITestCase):
         url = reverse("booking-list")
         data = {
             "room": self.room1.id,
-            "date_start": datetime.now()+ timezone.timedelta(days=1),
+            "date_start": datetime.now() + timezone.timedelta(days=1),
             "date_end": datetime.now() + timezone.timedelta(days=2),
         }
         response = self.client.post(url, data)
@@ -41,7 +41,7 @@ class UserCreateBookingApiTest(APITestCase):
         url = reverse("booking-list")
         data = {
             "room": self.room1.id,
-            "date_start": datetime.now()+ timezone.timedelta(days=1),
+            "date_start": datetime.now() + timezone.timedelta(days=1),
             "date_end": datetime.now() + timezone.timedelta(days=2),
         }
         response = self.client.post(url, data)
@@ -51,7 +51,7 @@ class UserCreateBookingApiTest(APITestCase):
         url = reverse("booking-list")
         data = {
             "room": self.room1.id,
-            "date_start": datetime.now()+ timezone.timedelta(days=1),
+            "date_start": datetime.now() + timezone.timedelta(days=1),
             "date_end": datetime.now() - timezone.timedelta(days=2),
         }
         response = self.client.post(url, data)
@@ -61,7 +61,7 @@ class UserCreateBookingApiTest(APITestCase):
         url = reverse("booking-list")
         data = {
             "room": self.room1.id,
-            "date_start": datetime.now()+ timezone.timedelta(days=1),
+            "date_start": datetime.now() + timezone.timedelta(days=1),
             "date_end": datetime.now() + timezone.timedelta(days=2),
         }
         self.client.post(url, data)

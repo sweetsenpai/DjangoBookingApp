@@ -2,11 +2,11 @@ from distutils.command.install import value
 
 from django.db.utils import IntegrityError
 
-from rest_framework import status
+from rest_framework import serializers, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
-from rest_framework import serializers
+
 from drf_spectacular.utils import (
     OpenApiExample,
     OpenApiParameter,
@@ -104,12 +104,13 @@ example_conflict = {
         summary="Удаление бронирования",
         description="Удаляет бронирование пользователя по его ID. Доступно только владельцу бронирования и суперпользователю.",
         parameters=[
-                OpenApiParameter(
-                    name="id",
-                    type=int,
-                    location=OpenApiParameter.PATH,
-                    description="`id` удаляемой брони",
-                ),],
+            OpenApiParameter(
+                name="id",
+                type=int,
+                location=OpenApiParameter.PATH,
+                description="`id` удаляемой брони",
+            ),
+        ],
         responses={
             204: OpenApiResponse(
                 description="Бронирование успешно удалено",
@@ -117,7 +118,7 @@ example_conflict = {
             401: OpenApiResponse(
                 description="Пользователь не авторизован.",
             ),
-404: OpenApiResponse(
+            404: OpenApiResponse(
                 description="Запись с указанным `ID` не существует или не принадлежит пользователю.",
                 response=serializers.Serializer,
                 examples=[
@@ -157,4 +158,3 @@ class BookingAPI(ModelViewSet):
                 },
                 status=status.HTTP_409_CONFLICT,
             )
-

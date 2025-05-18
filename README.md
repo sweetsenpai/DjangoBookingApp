@@ -1,15 +1,15 @@
 [![Coverage Status](https://coveralls.io/repos/github/sweetsenpai/DjangoBookingApp/badge.svg?t=12345)](https://coveralls.io/github/sweetsenpai/DjangoBookingApp)
+[![Run Pytest with Docker](https://github.com/sweetsenpai/DjangoBookingApp/actions/workflows/tests.yml/badge.svg)](https://github.com/sweetsenpai/DjangoBookingApp/actions/workflows/tests.yml)
+[![Django](https://img.shields.io/badge/Django-5.2-green?logo=django&logoColor=white)](https://www.djangoproject.com/)
+[![DRF](https://img.shields.io/badge/DRF-3.16-blue?logo=django&logoColor=white)](https://www.django-rest-framework.org/)
+[![Python 3.10](https://img.shields.io/badge/python-3.10%2B-orange?logo=python)](https://www.python.org/downloads/release/python-3100/)
 
 # DjangoBookingApp
 ## 📝Краткая информация
 RestAPI приложение реализующее функционал:
-* [Регистрации пользователей](#регистрация-и-авторизация)
-* [Логина пользователей](#регистрация-и-авторизация)
-* [Просмотра доступных комнат для бронирования](#фильтрация-комнат)
-* [Бронирование комнат](#бронирование-комнат)
-* [Удаление броний](#отмена-броней)
-* [Просмотр забронированных комнат](#просмотр-броней)
-* [Редактирование и создание новых комнат администратором](#суперпользователь)
+* **Регистрация новых пользователей**
+* **Поиск и сортировка комнат**
+* **Работа с бронями**
 
 ---
 ### ⚙️Стэк
@@ -50,16 +50,15 @@ RestAPI приложение реализующее функционал:
     - ⚙️ [`settings_prod`](booking_app/booking_app/settings_prod.py) — Оснавные настройки Django.
     - ⚙️ [`settings_dev`](booking_app/booking_app/settings_dev.py) — Настройки Django для разработки.
     - ⚙️ [`settings_dev`](booking_app/booking_app/settings_test.py) — Настройки Django для тестирования.
-- **[`🗂booking_app_admin/`](booking_app/booking_app_admin)** — Модуль с моделями и настройками панели администратора:
-  - 💃🏻 [`models`](booking_app/booking_app_admin/models.py) — Модели.
-  - 🧙‍♂️ [`admin`](booking_app/booking_app_admin/admin.py) — Настройки панели администратора.
-  - 🤖 [`tests`](booking_app/booking_app_admin/tests) — Тесты моделей.
-- **[`🗂booking_app_api/`](booking_app/booking_app_api)** — Модуль с api:
-  - 📌 [`🗂v1`](booking_app/booking_app_api/v1) — Основной модуль текущего приложения, вынесен в отдльную папку для поддержки версионирования.
-  - - 🔪 [`serializers`](booking_app/core/booking_api/serializers) — Сериализаторы.
-  - -  💻[`views`](booking_app/core/booking_api/views) — Views API.
-  - 🤖 [`tests`](booking_app/booking_app_api/tests) — Тесты.
+- **[`🗂core/`](booking_app/booking_app_admin)** — Основное приложение:
+- - **[`🗂booking_api/`](booking_app/core/booking_api)** — Модуль с api:
+- - - 🔪 [`serializers`](booking_app/core/booking_api/serializers) — Сериализаторы.
+- - - 💻[`views`](booking_app/core/booking_api/views) — Views API.
+  - 💃🏻 [`models`](booking_app/core/models.py) — Модели.
+  - 🧙‍♂️ [`admin`](booking_app/core/admin.py) — Настройки панели администратора.
+  - 🤖 [`tests`](booking_app/core/tests) — Тесты.
   - ⚒️ [`utils`](booking_app/core/utils) — Вспомогательные утилиты для работы API.
+  - 🧼 [`filters`](booking_app/core/filters) - фильтры
 - **[`⚓️docker-compose.prod.yml`](booking_app/docker-compose.prod.yml)** — `docker-compose` для продакшн среды.
 - **[`⚓️docker-compose.dev.yml`](booking_app/docker-compose.dev.yml)** — `docker-compose` для разработки.
 - **[`⚓️docker-compose.test.yml`](booking_app/docker-compose.test.yml)** — `docker-compose` для тестирования.
