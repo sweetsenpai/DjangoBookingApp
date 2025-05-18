@@ -1,7 +1,9 @@
-import pytest
-from core.models import Room
 from django.core.exceptions import ValidationError
 from django.test import TestCase
+
+import pytest
+
+from core.models import Room
 
 
 @pytest.mark.django_db(transaction=True, reset_sequences=True)

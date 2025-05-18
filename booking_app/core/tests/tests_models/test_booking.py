@@ -1,9 +1,11 @@
-import pytest
-from core.models import Booking, Room
 from django.contrib.auth.models import User
 from django.db.utils import IntegrityError
 from django.test import TestCase
 from django.utils import timezone
+
+import pytest
+
+from core.models import Booking, Room
 
 
 @pytest.mark.django_db(transaction=True, reset_sequences=True)

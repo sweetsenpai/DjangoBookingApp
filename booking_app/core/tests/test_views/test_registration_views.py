@@ -1,7 +1,9 @@
-import pytest
 from django.urls import reverse
+
 from rest_framework import status
 from rest_framework.test import APIClient, APITestCase
+
+import pytest
 
 
 @pytest.mark.django_db(transaction=True, reset_sequences=True)

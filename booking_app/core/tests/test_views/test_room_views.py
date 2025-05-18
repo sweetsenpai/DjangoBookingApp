@@ -1,10 +1,13 @@
 from decimal import Decimal
 
-import pytest
-from core.models import Room
 from django.urls import reverse
+
 from rest_framework import status
 from rest_framework.test import APITestCase
+
+import pytest
+
+from core.models import Room
 
 
 @pytest.mark.django_db(transaction=True, reset_sequences=True)

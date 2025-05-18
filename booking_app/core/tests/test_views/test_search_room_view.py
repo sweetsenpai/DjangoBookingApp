@@ -1,11 +1,13 @@
 from datetime import datetime
 from decimal import Decimal
 
-import pytest
-from core.models import Booking, Room
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.timezone import make_aware
+
+import pytest
+
+from core.models import Booking, Room
 
 
 @pytest.fixture

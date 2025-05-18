@@ -1,10 +1,17 @@
+from rest_framework.filters import OrderingFilter
+from rest_framework.viewsets import ReadOnlyModelViewSet
+
+from django_filters.rest_framework import DjangoFilterBackend
+from drf_spectacular.utils import (
+    OpenApiExample,
+    OpenApiParameter,
+    OpenApiTypes,
+    extend_schema,
+)
+
 from core.booking_api.serializers import RoomSerializer
 from core.filters.rooms_filters import RoomFilter
 from core.models import Room
-from django_filters.rest_framework import DjangoFilterBackend
-from drf_spectacular.utils import OpenApiExample, OpenApiParameter, extend_schema
-from rest_framework.filters import OrderingFilter
-from rest_framework.viewsets import ReadOnlyModelViewSet
 
 example_response_simple = [
     {
@@ -62,8 +69,20 @@ example_response_filtered = [
 
 @extend_schema(
     summary="Список комнат с возможностью сортировки и фильтрации",
-    description="Получить список всех комнат. Можно фильтровать по цене и вместимости, а также сортировать по полям `price_per_day`, `capacity`.",
+    description="Получить список всех комнат. Можно фильтровать по цене, вместимости и доступности в указанный временной промежуток, а также сортировать по полям `price_per_day`, `capacity`.",
     parameters=[
+        OpenApiParameter(
+            name="date_start",
+            type=OpenApiTypes.DATETIME,
+            location=OpenApiParameter.QUERY,
+            description="Дата заезда (формат YYYY-MM-DD). Используется только вместе с `date_end`.",
+        ),
+        OpenApiParameter(
+            name="date_end",
+            type=OpenApiTypes.DATETIME,
+            location=OpenApiParameter.QUERY,
+            description="Дата выезда (формат YYYY-MM-DD). Используется только вместе с `date_start`.",
+        ),
         OpenApiParameter(
             name="min_price",
             type=float,
@@ -86,7 +105,7 @@ example_response_filtered = [
             name="ordering",
             type=str,
             location=OpenApiParameter.QUERY,
-            description="Поля для сортировки через запятую. Например: `price_per_day,-capacity`",
+            description="Поля для сортировки через запятую. `price_per_day, -price_per_day` и `capacity, -capacity`",
         ),
     ],
     responses={200: RoomSerializer(many=True)},
@@ -108,18 +127,24 @@ example_response_filtered = [
         ),
     ],
 )
-class ShowRoomsApi(ReadOnlyModelViewSet):
+class RoomsApi(ReadOnlyModelViewSet):
     """
     API endpoint - возвращает список из всех комнат,
-    с возможностью сортировки и фильтрации по полям price_per_day и capacity.
+    с возможностью сортировки и фильтрации по полям price_per_day и capacity, а так же поиском свободных комнат.
 
     Каждый элемент списка содержит id, name, price_per_day, capacity.
     """
 
     queryset = Room.objects.all()
     serializer_class = RoomSerializer
-
     filter_backends = [DjangoFilterBackend, OrderingFilter]
     filterset_class = RoomFilter
     ordering_fields = ["price_per_day", "capacity"]
     ordering = ["price_per_day"]
+
+    @extend_schema(exclude=True)
+    def retrieve(self, request, *args, **kwargs):
+        return Response(
+            {"detail": "Method 'retrieve' not allowed."},
+            status=status.HTTP_405_METHOD_NOT_ALLOWED,
+        )

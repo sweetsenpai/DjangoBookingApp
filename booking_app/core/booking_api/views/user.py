@@ -1,15 +1,19 @@
 import logging
 
-from core.booking_api.serializers import RegistrationSerializer
-from core.utils import UserRegistrationThrottle
 from django.contrib.auth import get_user_model
 from django.db import transaction
-from drf_spectacular.utils import OpenApiExample, OpenApiResponse, extend_schema
+
 from rest_framework import generics, status
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.serializers import ValidationError
+from rest_framework.viewsets import ModelViewSet
+
+from drf_spectacular.utils import OpenApiExample, OpenApiResponse, extend_schema
 from rest_framework_simplejwt.tokens import RefreshToken
+
+from core.booking_api.serializers import RegistrationSerializer
+from core.utils import UserRegistrationThrottle
 
 logger = logging.getLogger(__name__)
 
@@ -87,7 +91,7 @@ logger = logging.getLogger(__name__)
         ),
     },
 )
-class UserRegistrationApi(generics.CreateAPIView):
+class UserApi(ModelViewSet):
     """
     API эндпоинт для регистрации нового пользователя.
 
@@ -104,6 +108,7 @@ class UserRegistrationApi(generics.CreateAPIView):
     permission_classes = [AllowAny]
     serializer_class = RegistrationSerializer
     throttle_classes = [UserRegistrationThrottle]
+    http_method_names = ["post"]
 
     def create(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data)

@@ -1,13 +1,16 @@
 from datetime import datetime
 from decimal import Decimal
 
-import pytest
-from core.models import Room
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from django.utils import timezone
+
 from rest_framework import status
 from rest_framework.test import APIClient, APITestCase
+
+import pytest
+
+from core.models import Room
 
 
 @pytest.mark.django_db(transaction=True, reset_sequences=True)
