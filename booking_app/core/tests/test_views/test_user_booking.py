@@ -50,7 +50,7 @@ class UserBookingApiTest(APITestCase):
         )
 
     def test_get_user_rooms(self):
-        url = reverse("user-all-booking")
+        url = reverse("booking-list")
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -70,54 +70,54 @@ class UserBookingApiTest(APITestCase):
 
     def test_get_user_rooms_without_auth(self):
         self.client.logout()
-        url = reverse("user-all-booking")
+        url = reverse("booking-list")
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_get_ditail_data_someone_else_user_booking(self):
         self.client.login(username="user", password="54321")
-        url = reverse("user-booking", kwargs={"pk": self.booking1.id})
+        url = reverse("booking-detail", kwargs={"pk": self.booking1.id})
         response = self.client.get(url)
 
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_get_ditail_data_someone_else_user_booking_admin(self):
         self.client.login(username="admin", password="admin")
-        url = reverse("user-booking", kwargs={"pk": self.booking2.id})
+        url = reverse("booking-detail", kwargs={"pk": self.booking2.id})
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_get_ditail_data_user_nonexisting_booking(self):
         self.client.login(username="user", password="54321")
-        url = reverse("user-booking", kwargs={"pk": 7})
+        url = reverse("booking-detail", kwargs={"pk": 7})
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_delete_someone_else_user_booking(self):
         self.client.login(username="user", password="54321")
-        url = reverse("user-booking", kwargs={"pk": self.booking1.id})
+        url = reverse("booking-detail", kwargs={"pk": self.booking1.id})
         response = self.client.delete(url)
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_delete_user_booking(self):
         self.client.login(username="user", password="54321")
-        url = reverse("user-booking", kwargs={"pk": self.booking2.id})
+        url = reverse("booking-detail", kwargs={"pk": self.booking2.id})
         response = self.client.delete(url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertFalse(Booking.objects.filter(id=self.booking2.id).exists())
 
     def test_delete_user_booking_admin(self):
         self.client.login(username="admin", password="admin")
-        url = reverse("user-booking", kwargs={"pk": self.booking2.id})
+        url = reverse("booking-detail", kwargs={"pk": self.booking2.id})
         response = self.client.delete(url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertFalse(Booking.objects.filter(id=self.booking2.id).exists())
 
     def test_get_user_rooms_empty(self):
         self.client.login(username="admin", password="admin")
-        url = reverse("user-all-booking")
+        url = reverse("booking-list")
 
         Booking.objects.filter(user=self.user).delete()
 

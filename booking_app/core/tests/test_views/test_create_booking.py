@@ -26,10 +26,10 @@ class UserCreateBookingApiTest(APITestCase):
         )
 
     def test_create_booking(self):
-        url = reverse("create-booking")
+        url = reverse("booking-list")
         data = {
             "room": self.room1.id,
-            "date_start": datetime.now(),
+            "date_start": datetime.now()+ timezone.timedelta(days=1),
             "date_end": datetime.now() + timezone.timedelta(days=2),
         }
         response = self.client.post(url, data)
@@ -38,30 +38,30 @@ class UserCreateBookingApiTest(APITestCase):
 
     def test_create_booking_without_auth(self):
         self.client.logout()
-        url = reverse("create-booking")
+        url = reverse("booking-list")
         data = {
             "room": self.room1.id,
-            "date_start": datetime.now(),
+            "date_start": datetime.now()+ timezone.timedelta(days=1),
             "date_end": datetime.now() + timezone.timedelta(days=2),
         }
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_create_booking_with_wrong_data(self):
-        url = reverse("create-booking")
+        url = reverse("booking-list")
         data = {
             "room": self.room1.id,
-            "date_start": datetime.now(),
+            "date_start": datetime.now()+ timezone.timedelta(days=1),
             "date_end": datetime.now() - timezone.timedelta(days=2),
         }
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_create_overlaping_booking(self):
-        url = reverse("create-booking")
+        url = reverse("booking-list")
         data = {
             "room": self.room1.id,
-            "date_start": datetime.now(),
+            "date_start": datetime.now()+ timezone.timedelta(days=1),
             "date_end": datetime.now() + timezone.timedelta(days=2),
         }
         self.client.post(url, data)

@@ -158,9 +158,3 @@ class BookingAPI(ModelViewSet):
                 status=status.HTTP_409_CONFLICT,
             )
 
-    @extend_schema(exclude=True)
-    def retrieve(self, request, *args, **kwargs):
-        return Response(
-            {"detail": "Method 'retrieve' not allowed."},
-            status=status.HTTP_405_METHOD_NOT_ALLOWED,
-        )

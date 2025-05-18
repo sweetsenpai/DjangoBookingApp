@@ -13,7 +13,7 @@ from .booking_api.views import *
 
 router = DefaultRouter()
 
-router.register("api/rooms", RoomsApi, basename="all-room")
+router.register("api/rooms", RoomsApi, basename="room")
 router.register("api/booking", BookingAPI, basename="booking")
 router.register("api/user", UserApi, basename="user")
 urlpatterns = [

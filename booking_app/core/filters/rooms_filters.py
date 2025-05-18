@@ -39,18 +39,17 @@ class RoomFilter(filters.FilterSet):
         return free_rooms
 
     def filter_by_availability(self, queryset, name, value):
-        # Получаем обе даты как date-объекты
         date_start = self.form.cleaned_data.get("date_start")
         date_end = self.form.cleaned_data.get("date_end")
 
         if not date_start or not date_end:
-            return queryset  # Если одной из дат нет — не фильтруем
+            return queryset
 
-        # Преобразуем в datetime и делаем aware
         date_start_dt = timezone.make_aware(datetime.combine(date_start, time.min))
         date_end_dt = timezone.make_aware(datetime.combine(date_end, time.min))
 
-        # Валидируем
         validate_dates(date_start_dt, date_end_dt)
+
         free_rooms = self.get_free_rooms(date_start_dt, date_end_dt)
-        return free_rooms
+        return queryset.filter(id__in=free_rooms.values_list("id", flat=True))
+

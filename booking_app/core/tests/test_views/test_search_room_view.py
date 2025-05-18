@@ -46,7 +46,7 @@ def test_bookings(test_rooms, django_user_model):
 
 @pytest.mark.django_db(transaction=True, reset_sequences=True)
 def test_free_rooms_available(client, test_bookings, test_rooms):
-    url = reverse("search-free-rooms")
+    url = reverse("room-list")
     response = client.get(
         url,
         {
@@ -64,9 +64,10 @@ def test_free_rooms_available(client, test_bookings, test_rooms):
 
 @pytest.mark.django_db(transaction=True, reset_sequences=True)
 def test_free_rooms_capacity_filter(client, test_bookings, test_rooms):
-    url = reverse("search-free-rooms")
+    url = reverse("room-list")
     response = client.get(
         url,
+        data=
         {
             "date_start": "2026-01-02",
             "date_end": "2026-01-03",
@@ -81,16 +82,17 @@ def test_free_rooms_capacity_filter(client, test_bookings, test_rooms):
 
 @pytest.mark.django_db(transaction=True, reset_sequences=True)
 def test_free_rooms_validation_error(client):
-    url = reverse("search-free-rooms")
-    response = client.get(url, {"date_end": "2021-01-03"})
+    url = reverse("room-list")
+    response = client.get(f"{url}", data={"date_start": "2021-01-03", "date_end": "2021-01-04"})
     assert response.status_code == 400
 
 
 @pytest.mark.django_db(transaction=True, reset_sequences=True)
 def test_free_rooms_wrong_data_end_data_less_start(client):
-    url = reverse("search-free-rooms")
+    url = reverse("room-list")
     response = client.get(
         url,
+        data=
         {
             "date_start": datetime.now() + timezone.timedelta(days=2),
             "date_end": datetime.now() - timezone.timedelta(days=1),
@@ -101,10 +103,11 @@ def test_free_rooms_wrong_data_end_data_less_start(client):
 
 @pytest.mark.django_db(transaction=True, reset_sequences=True)
 def test_free_rooms_end_date_in_past(client):
-    url = reverse("search-free-rooms")
+    url = reverse("room-list")
     today = timezone.now()
     response = client.get(
         url,
+        data=
         {
             "date_start": (today - timezone.timedelta(days=10)).isoformat(),
             "date_end": (today - timezone.timedelta(days=5)).isoformat(),
@@ -112,9 +115,3 @@ def test_free_rooms_end_date_in_past(client):
     )
     assert response.status_code == 400
 
-
-@pytest.mark.django_db(transaction=True, reset_sequences=True)
-def test_free_rooms_no_data(client):
-    url = reverse("search-free-rooms")
-    response = client.get(url)
-    assert response.status_code == 400
